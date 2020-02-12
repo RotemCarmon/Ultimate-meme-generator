@@ -14,21 +14,20 @@
         <h1>Image Generator</h1>
         <nav class="navbar-container flex ">
             <ul class="nav-bar clean-list flex">
-                <li><a href="#">GALLERY</a></li>
-                <li><a href="#">MEME</a></li>
+                <li><a href="#" onclick="toggleDisplay()">GALLERY</a></li>
+                <li><a href="#" onclick="toggleDisplay()">MEME</a></li>
                 <li><a href="#">ABOUT</a></li>
                
             </ul>
         </nav>
     </header>
-    <div class="main-container container">
+    <div class="main-container container ">
 
-        <div class="meme-container flex space-between">
-            <canvas id="meme-canvas" width="500" height="500"></canvas>
+        <div class="meme-container flex space-between" style="display:none">
+            <canvas id="meme-canvas" width="500" height="500" ></canvas>
 
             <div class="control-panel flex column align-center">
                 <input type="text" name="first-text" class="first-input" id="first-text" placeholder="Enter Text Here">
-                    <!-- onkeyup="onTextInput()" onkeyup="onBackspacePress(event)" onfocus="onSetLine(1)"> -->
                 <div class="buttons">
                     <div class="button increase fa fa-font " onclick="onSetFontSize(1)">+</div>
                     <div class="button decrease fa fa-font" onclick="onSetFontSize(-1)">-</div>
@@ -36,7 +35,6 @@
                     <div class="button down fa fa-arrow-down" onclick="onSetTextPos(10)"></div>
                 </div>
                 <input type="text" name="secondt-text" class="second-input" id="second-text" placeholder="Enter Text Here">
-                    <!-- onkeyup="onTextInput()"  onfocus="onSetLine(2)"> -->
             </div>
         </div>
 

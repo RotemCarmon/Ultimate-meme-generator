@@ -46,7 +46,7 @@ function clickOnText(ev) {
         && ex < pos1.x + textWidth1
         && ey > pos1.y - textHeight1
         && ey < pos1.y) {
-        gCtx.rect( pos1.x - 40, pos1.y - textHeight1 - 15, pos1.x + textWidth1 + 40, pos1.y + 5 )
+        gCtx.rect(pos1.x - 40, pos1.y - textHeight1 - 15, pos1.x + textWidth1 + 40, pos1.y + 5)
         gCtx.fillStyle = '#88a4b151';
         gCtx.fill()
         onSetLine(1)
@@ -55,10 +55,10 @@ function clickOnText(ev) {
         && ex < pos2.x + textWidth2
         && ey > pos2.y - textHeight2
         && ey < pos2.y) {
-            gCtx.rect( pos2.x - 40, pos2.y - textHeight2 - 15, pos2.x + textWidth2 + 40, pos2.y + 5 )
-            gCtx.fillStyle = '#88a4b151';
-            gCtx.fill()
-            onSetLine(2)
+        gCtx.rect(pos2.x - 40, pos2.y - textHeight2 - 15, pos2.x + textWidth2 + 40, pos2.y + 5)
+        gCtx.fillStyle = '#88a4b151';
+        gCtx.fill()
+        onSetLine(2)
     }
 }
 
@@ -78,7 +78,22 @@ function showImages() {
 function onImgSelect(img) {
     var selectedImgId = img.dataset.img;
     updateCurrImgId(selectedImgId)
+    toggleDisplay()
     onDarwImg()
+}
+
+function toggleDisplay() {
+    var elMeme = document.querySelector('.meme-container')
+    var elGallery = document.querySelector('.img-gallery')
+    if (elMeme.style.display !== 'flex') {
+        elGallery.style.display = 'none'
+        elMeme.style.display = 'flex'
+    } else {
+        elGallery.style.display = 'flex'
+        elMeme.style.display = 'none'
+        
+    }
+
 }
 
 // --- CONTROL PANEL ---
