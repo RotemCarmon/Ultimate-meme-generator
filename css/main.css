@@ -27,7 +27,10 @@ header{
 }
 
 /* Image Gallery */
-
+    .img-gallery img{
+        width: 150px;
+        margin: 0 15px;
+    }
 
 /* Meme */
 
