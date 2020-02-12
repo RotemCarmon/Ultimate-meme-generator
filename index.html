@@ -19,14 +19,16 @@
             <canvas id="meme-canvas" width="500" height="500"></canvas>
 
             <div class="control-panel flex column align-center">
-                <input type="text" name="first-text" class="first-input" id="first-text" placeholder="Enter Text Here"
-                    onkeyup="onTextInput()" onkeydown="onBackspacePress(event)">
+                <input type="text" name="first-text" class="first-input" id="first-text" placeholder="Enter Text Here">
+                    <!-- onkeyup="onTextInput()" onkeyup="onBackspacePress(event)" onfocus="onSetLine(1)"> -->
                 <div class="buttons">
                     <div class="button increase fa fa-font " onclick="onSetFontSize(1)">+</div>
                     <div class="button decrease fa fa-font" onclick="onSetFontSize(-1)">-</div>
-                    <div class="button up fa fa-arrow-up"     onclick="onSetTextPos(-10)"></div>
+                    <div class="button up fa fa-arrow-up" onclick="onSetTextPos(-10)"></div>
                     <div class="button down fa fa-arrow-down" onclick="onSetTextPos(10)"></div>
                 </div>
+                <input type="text" name="secondt-text" class="second-input" id="second-text" placeholder="Enter Text Here">
+                    <!-- onkeyup="onTextInput()"  onfocus="onSetLine(2)"> -->
             </div>
         </div>
 

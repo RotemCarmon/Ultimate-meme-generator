@@ -2,79 +2,102 @@
 
 
 // --- GLOBALS ---
-var gCurrMeme = 0;
-// gCurrMeme should be equal to selectedImgId
 
 
 var gImgs = [
     {
         id: 0,
         url: './img/1.jpg',
-        keywords:['funny']
+        keywords: ['funny']
     },
     {
         id: 1,
         url: './img/2.jpg',
-        keywords:['cute']
+        keywords: ['cute']
     },
 ]
 
 var gMeme = {
-    selectedImgId:0,
-    selectedLineidx:0,
-
-    lines:[
+    selectedImgId: 0,
+    selectedLineidx: 0,
+    
+    lines: [
         {
             txt: '',
             size: 40,
             align: 'left',
-            color: 'red' ,
-            pos: {x:50 ,y:80}
+            color: 'red',
+            pos: { x: 50, y: 80 }
+        },
+        {
+            txt: '',
+            size: 35,
+            align: 'left',
+            color: 'blue',
+            pos: { x: 50, y: 400 }
         },
     ],
 }
 
 
 
+
+function getLineObjs(){
+    var lines = gMeme.lines
+   return lines
+}
+
+// var gMeme.selectedLineidx = gMeme.selectedLineidx;
+
 // --- CONTROL PANEL ---
 
-function updateTextLine(txt){
-    gMeme.lines[gCurrMeme].txt = txt
+function updateTextLine(txt) {
+    gMeme.lines[gMeme.selectedLineidx].txt = txt
 }
-function setFontSize(diff){
-    gMeme.lines[gCurrMeme].size += diff
+function setFontSize(diff) {
+    gMeme.lines[gMeme.selectedLineidx].size += diff
 }
-function setTextPos(diff){
-    gMeme.lines[gCurrMeme].pos.y += diff
+function setTextPos(diff) {
+    gMeme.lines[gMeme.selectedLineidx].pos.y += diff
 }
-function getFontSize(){
-    return gMeme.lines[gCurrMeme].size;
+function getFontSize() {
+    return gMeme.lines[gMeme.selectedLineidx].size;
 }
-function getTextPos(){
-    return gMeme.lines[gCurrMeme].pos
+function getTextPos() {
+    return gMeme.lines[gMeme.selectedLineidx].pos
 }
 
 
 // --- IMAGE GALLERY ---
 
-function updateCurrImgId(id){
+function updateCurrImgId(id) {
     gMeme.selectedImgId = id
 }
-function getImageGallery(){
+function getImageGallery() {
     return gImgs
 }
 
 // --- MEME EDITOR ---
 
-function getImg(){
+function getImg() {
     return gImgs[gMeme.selectedImgId];
 }
-function getText(){
-    return gMeme.lines[gCurrMeme].txt.toUpperCase();
+function getText() {
+    return gMeme.lines[gMeme.selectedLineidx].txt.toUpperCase();
 }
-function getTextAlign(){
-    return gMeme.lines[gCurrMeme].align;
+function getTextAlign() {
+    return gMeme.lines[gMeme.selectedLineidx].align;
 }
+
+
+function setCurrLine(line) {
+    if(line < 1) line = 1
+    gMeme.selectedLineidx = ( line - 1);
+}
+function getCurrLine() {
+    return gMeme.selectedLineidx;
+}
+
 
 
 // --- SEARCH ---
