@@ -11,10 +11,6 @@ function onInit() {
     showImages()
 }
 
-
-
-
-
 // --- IMAGE GALLERY --- 
 
 function showImages() {
@@ -37,14 +33,27 @@ function onImgSelect(img) {
 
 // --- CONTROL PANEL ---
 
-function onAddTextInput(){
+
+function onTextInput() {
     var firstTextBox = document.getElementById('first-text');
     var txt = firstTextBox.value;
     updateTextLine(txt);
     onAddText()
-
 }
 
+function onSetFontSize(diff) {
+    setFontSize(diff)
+    onDarwImg()
+ 
+}
+
+function onSetTextPos(diff){
+    setTextPos(diff)
+    onDarwImg()
+
+
+
+}
 // --- MEME EDITOR ---
 
 function onDarwImg() {
@@ -53,14 +62,29 @@ function onDarwImg() {
     img.src = currImg.url
     img.onload = () => {
         gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height)
+        onTextInput()
     }
 }
 
 function onAddText() {
     var firstTextLine = getText();
-    gCtx.font = '40px IMPACT';
+    var size = getFontSize()
+    var txtPos = getTextPos()
+    gCtx.font = size + 'px IMPACT';
     gCtx.fillStyle = '#ffffff'
     gCtx.strokeStyle = '#000000'
-    gCtx.strokeText(firstTextLine, 50, 80)
-    gCtx.fillText(firstTextLine, 50, 80)
+    gCtx.textAlign = getTextAlign()
+    gCtx.strokeText(firstTextLine, txtPos.x,txtPos.y)
+    gCtx.fillText(firstTextLine, txtPos.x,txtPos.y)
+}
+
+
+function onClearText() {
+    onDarwImg()
+
+}
+
+function onBackspacePress(ev) {
+    if (ev.keyCode === 8)onDarwImg()
+    return
 }

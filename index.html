@@ -1,26 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate meme creator</title>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="lib/font-awesome-4.7.0/css/font-awesome.min.css">
 </head>
+
 <body onload="onInit()">
     <header class="flex justify-center align-center">
         <h1>Image Generator</h1>
     </header>
     <div class="main-container container">
-    
-        <div class="meme-container">
+
+        <div class="meme-container flex space-between">
             <canvas id="meme-canvas" width="500" height="500"></canvas>
+
+            <div class="control-panel flex column align-center">
+                <input type="text" name="first-text" class="first-input" id="first-text" placeholder="Enter Text Here"
+                    onkeyup="onTextInput()" onkeydown="onBackspacePress(event)">
+                <div class="buttons">
+                    <div class="button increase fa fa-font " onclick="onSetFontSize(1)">+</div>
+                    <div class="button decrease fa fa-font" onclick="onSetFontSize(-1)">-</div>
+                    <div class="button up fa fa-arrow-up"     onclick="onSetTextPos(-10)"></div>
+                    <div class="button down fa fa-arrow-down" onclick="onSetTextPos(10)"></div>
+                </div>
+            </div>
         </div>
-        
-        <div class="control-panel">
-            <input type="text" name="first-text" id="first-text" placeholder="Enter Text Here" onkeyup="onAddTextInput()">
-        </div>
-        
-        
+
+
         <div class="img-gallery-container">
             <div class="img-gallery"></div>
         </div>
@@ -31,7 +41,8 @@
     <footer>
 
     </footer>
-        <script src="js/meme-service.js"></script>
-        <script src="js/meme-controller.js"></script>
+    <script src="js/meme-service.js"></script>
+    <script src="js/meme-controller.js"></script>
 </body>
+
 </html>

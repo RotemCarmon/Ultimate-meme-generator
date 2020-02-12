@@ -2,10 +2,11 @@
 
 
 // --- GLOBALS ---
+var gCurrMeme = 0;
+// gCurrMeme should be equal to selectedImgId
 
-// TODO - Hold array of image objects
+
 var gImgs = [
-    // TODO - Every image has an id, url, keyword
     {
         id: 0,
         url: './img/1.jpg',
@@ -24,10 +25,11 @@ var gMeme = {
 
     lines:[
         {
-            txt: 'Fuck You All',
-            size: 20,
+            txt: '',
+            size: 40,
             align: 'left',
-            color: 'red' 
+            color: 'red' ,
+            pos: {x:50 ,y:80}
         },
     ],
 }
@@ -37,14 +39,26 @@ var gMeme = {
 // --- CONTROL PANEL ---
 
 function updateTextLine(txt){
-    gMeme.lines[0].txt = txt
+    gMeme.lines[gCurrMeme].txt = txt
 }
+function setFontSize(diff){
+    gMeme.lines[gCurrMeme].size += diff
+}
+function setTextPos(diff){
+    gMeme.lines[gCurrMeme].pos.y += diff
+}
+function getFontSize(){
+    return gMeme.lines[gCurrMeme].size;
+}
+function getTextPos(){
+    return gMeme.lines[gCurrMeme].pos
+}
+
 
 // --- IMAGE GALLERY ---
 
 function updateCurrImgId(id){
     gMeme.selectedImgId = id
-
 }
 function getImageGallery(){
     return gImgs
@@ -55,12 +69,12 @@ function getImageGallery(){
 function getImg(){
     return gImgs[gMeme.selectedImgId];
 }
-
-
 function getText(){
-    return gMeme.lines[0].txt.toUpperCase();
+    return gMeme.lines[gCurrMeme].txt.toUpperCase();
 }
-// TODO - hold the x,y position of the text box
+function getTextAlign(){
+    return gMeme.lines[gCurrMeme].align;
+}
 
 
 // --- SEARCH ---
