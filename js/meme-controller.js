@@ -28,6 +28,20 @@ function addEventListeners() {
     gCanvas.addEventListener('click', () => clickOnText(event))
 }
 
+function toggleNavbar(elBtn){
+    var elNavbar = document.querySelector('.navbar-container')
+
+    if(elNavbar.style.display !== 'flex'){
+        elNavbar.style.display ='flex'
+        elBtn.classList.remove('fa-bars')
+        elBtn.classList.add('fa-times')
+        console.log(elNavbar)
+    } else{
+        elNavbar.style.display ='none'
+        elBtn.classList.remove('fa-times')
+        elBtn.classList.add('fa-bars')
+    }
+}
 
 
 // TODO - make function look nicer run with a loop

@@ -45,6 +45,7 @@ header{
     font-family: 'Righteous', cursive;
     height: 80px;
     padding: 0 20px;
+    min-width: 600px;
     background-color: #ecb390;
 }
 
@@ -69,9 +70,12 @@ h1 span{
     padding: 10px;
 }
 
-/* .nav-bar li:not(:last-child){
+header .menu-btn{
+    display: none;
+    padding: 5px;
     margin-right: 30px;
-} */
+}
+
 
 /* Image Gallery */
 
@@ -106,6 +110,8 @@ footer{
     padding: 60px;
     background-color: #ecb390;
     font-family: 'Righteous', cursive;
+    min-width: 600px;
+    
 }
 
 /* Helpers */
@@ -150,7 +156,7 @@ footer{
         width: 800px;
         padding: 0 10px;
     }
-
+    
     input{
         height: 2rem;
         width: 14rem;
@@ -172,23 +178,52 @@ footer{
         margin: 0 auto;
         padding: 10px 0;
     }
-
+    
 }
 
 @media (max-width: 620px){
     
     
     .container{
-
+        
         min-width: 500px;
         padding: 5px 5px ; 
         margin: 0 auto;
     }
+    header{
+        
+    }
     .navbar-container{
         display: none;
+        position: absolute;
+        right: 0; 
+        top: 80px;
+        padding: 0 5px 2px;
+        height: fit-content
+        
+    }
+    .nav-bar{
+        justify-content: space-between;
+        background-color: #ecb390e1;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+    }
+    .nav-bar li{
+        height: fit-content;
+        border: none;
+        margin:6px 4px;
+    }
+    .nav-bar a{
+        height: 120px;
+        background-color: #ecb390;
+        width: 400px;
     }
     .meme-container{
         margin: 0;
-        justify-content: center;
+        align-content: center;
+    }
+    header .menu-btn{
+        display: inline-block;
     }
 }
