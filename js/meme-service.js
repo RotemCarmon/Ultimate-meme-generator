@@ -1,6 +1,5 @@
 'use strict';
 
-console.log('service');
 
 // --- GLOBALS ---
 
@@ -34,13 +33,19 @@ var gMeme = {
 }
 
 
-function updateCurrImgId(id){
-    gMeme.selectedImgId = id
 
+// --- CONTROL PANEL ---
+
+function updateTextLine(txt){
+    gMeme.lines[0].txt = txt
 }
 
 // --- IMAGE GALLERY ---
 
+function updateCurrImgId(id){
+    gMeme.selectedImgId = id
+
+}
 function getImageGallery(){
     return gImgs
 }
@@ -53,7 +58,6 @@ function getImg(){
 
 
 function getText(){
-    console.log(gMeme.lines)
     return gMeme.lines[0].txt.toUpperCase();
 }
 // TODO - hold the x,y position of the text box

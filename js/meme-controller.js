@@ -1,6 +1,5 @@
 'use strict';
 
-console.log('controller');
 
 var gCanvas;
 var gCtx
@@ -34,11 +33,17 @@ function onImgSelect(img) {
     var selectedImgId = img.dataset.img;
     updateCurrImgId(selectedImgId)
     onDarwImg()
-    // return selectedImgId;    
 }
 
+// --- CONTROL PANEL ---
 
+function onAddTextInput(){
+    var firstTextBox = document.getElementById('first-text');
+    var txt = firstTextBox.value;
+    updateTextLine(txt);
+    onAddText()
 
+}
 
 // --- MEME EDITOR ---
 
