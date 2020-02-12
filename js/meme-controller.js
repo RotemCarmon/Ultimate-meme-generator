@@ -18,6 +18,7 @@ function addEventListeners() {
     var secondText = document.querySelector('.second-input');
     firstText.addEventListener('keyup', () => {
         onTextInput()
+        
     });
     secondText.addEventListener('keyup', () => {
         onTextInput()
@@ -28,6 +29,8 @@ function addEventListeners() {
 }
 
 
+
+// TODO - make function look nicer run with a loop
 function clickOnText(ev) {
     var ex = ev.offsetX;
     var ey = ev.offsetY;
@@ -89,12 +92,13 @@ function toggleDisplay() {
         elGallery.style.display = 'none'
         elMeme.style.display = 'flex'
     } else {
-        elGallery.style.display = 'flex'
-        elMeme.style.display = 'none'
-        
+        elGallery.style.display = 'grid'
+        elMeme.style.display = 'none'  
     }
-
 }
+
+
+// TODO - when a nav button is pressed it can't be repressed
 
 // --- CONTROL PANEL ---
 function onSetLine(line) {
@@ -110,9 +114,9 @@ function onTextInput() {
         var secondTextBox = document.getElementById('second-text');
         var txt = secondTextBox.value;
     }
-
     updateTextLine(txt);
-    renderTexts()
+    onDarwImg()
+    // renderTexts()
 }
 
 function onSetFontSize(diff) {

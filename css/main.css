@@ -2,6 +2,9 @@
 *{
     box-sizing: border-box;
 }
+*:focus{
+    outline: none;
+}
 
 body{
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
@@ -19,6 +22,8 @@ input{
     width: 20rem;
     margin: 1.5rem 2rem;
 }
+
+
 a{
     text-decoration: none;
     color: unset;
@@ -26,7 +31,6 @@ a{
 img{
     margin: 0;
 }
-
 
 /* Main */
 .container{
@@ -38,41 +42,48 @@ img{
 
 /* Header */
 header{
-    height: 60px;
+    font-family: 'Righteous', cursive;
+    height: 80px;
     padding: 0 20px;
-    background-color: #ecb390   ;
-    
+    background-color: #ecb390;
+}
+
+h1 span{
+    font-size: 4rem;
 }
 .nav-bar li{
-
-    width: 60px;
-    height: 60px;
+    height: 80px;
     border-left: 1px solid #df7861;
-
 }
 
+.nav-bar li:last-child{
+    border-right: 1px solid #df7861;
+    
+}
 .nav-bar a{
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 60px;
+    height: 80px;
+    width: 80px;
+    padding: 10px;
 }
 
-.nav-bar li:not(:last-child){
+/* .nav-bar li:not(:last-child){
     margin-right: 30px;
-}
+} */
 
 /* Image Gallery */
-    .img-gallery img{
-        width: 150px;
-        margin: 15px 15px;
-    }
 
-    .img-gallery{
-        display: grid;
-        grid-auto-rows: 180px;
-        grid-template-columns :repeat(5 ,1fr) ;
-    }
+.img-gallery img{
+    width: 150px;    
+    margin: 15px 15px;
+}
+
+.img-gallery{
+    display: grid;
+    grid-template-columns: repeat(auto-fill , minmax(170px , 1fr)) ;
+}
 
 /* Meme */
 
@@ -86,11 +97,16 @@ canvas{
 .button{
     border: 1px solid black;
     margin: 10px;
-    padding: 10px 15px;
+    padding: 10px 12px;
 }
 
-/* Layout */
-
+/* Footer */
+footer{
+    height: 40px;
+    padding: 60px;
+    background-color: #ecb390;
+    font-family: 'Righteous', cursive;
+}
 
 /* Helpers */
 
@@ -129,3 +145,50 @@ canvas{
 }
 
 
+@media (max-width: 1060px){
+    .container{
+        width: 800px;
+        padding: 0 10px;
+    }
+
+    input{
+        height: 2rem;
+        width: 14rem;
+        margin: 1.5rem 2rem;
+    }
+    .buttons{
+        margin: 5px;
+    }
+    
+}
+
+@media (max-width: 800px){
+    .container{
+        width: 600px;
+    }
+    .meme-container{
+        flex-direction: column;
+        width: 500px;
+        margin: 0 auto;
+        padding: 10px 0;
+    }
+
+}
+
+@media (max-width: 620px){
+    
+    
+    .container{
+
+        min-width: 500px;
+        padding: 5px 5px ; 
+        margin: 0 auto;
+    }
+    .navbar-container{
+        display: none;
+    }
+    .meme-container{
+        margin: 0;
+        justify-content: center;
+    }
+}
