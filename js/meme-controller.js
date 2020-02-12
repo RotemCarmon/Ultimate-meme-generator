@@ -16,9 +16,7 @@ function onInit() {
 function addEventListeners() {
     var firstText = document.querySelector('.first-input');
     var secondText = document.querySelector('.second-input');
-    firstText.addEventListener('keyup', (event) => {
-        // console.log(event.keyCode)
-        // if()
+    firstText.addEventListener('keyup', () => {
         onTextInput()
     });
     secondText.addEventListener('keyup', () => {
@@ -48,17 +46,21 @@ function clickOnText(ev) {
         && ex < pos1.x + textWidth1
         && ey > pos1.y - textHeight1
         && ey < pos1.y) {
-        console.log('Succsesssss!!!!!    pos 1')
+        gCtx.rect( pos1.x - 40, pos1.y - textHeight1 - 15, pos1.x + textWidth1 + 40, pos1.y + 5 )
+        gCtx.fillStyle = '#88a4b151';
+        gCtx.fill()
+        onSetLine(1)
     } else if (
         ex > pos2.x
         && ex < pos2.x + textWidth2
         && ey > pos2.y - textHeight2
         && ey < pos2.y) {
-        console.log('Succsesssss!!!!!    pos 2')
-
+            gCtx.rect( pos2.x - 40, pos2.y - textHeight2 - 15, pos2.x + textWidth2 + 40, pos2.y + 5 )
+            gCtx.fillStyle = '#88a4b151';
+            gCtx.fill()
+            onSetLine(2)
     }
 }
-
 
 // --- IMAGE GALLERY --- 
 
@@ -70,7 +72,6 @@ function showImages() {
         }).join('');
     var elGallery = document.querySelector('.img-gallery');
     elGallery.innerHTML = strHTMLs;
-    // console.log('gallery', elGallery);
 
 }
 
@@ -83,12 +84,10 @@ function onImgSelect(img) {
 // --- CONTROL PANEL ---
 function onSetLine(line) {
     setCurrLine(line)
-    console.log('currLine', getCurrLine())
 }
 
 function onTextInput() {
     var line = getCurrLine();
-    // console.log('Did It!')
     if (line === 0) {
         var firstTextBox = document.getElementById('first-text');
         var txt = firstTextBox.value;

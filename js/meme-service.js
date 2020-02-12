@@ -34,7 +34,7 @@ var gMeme = {
             size: 35,
             align: 'left',
             color: 'blue',
-            pos: { x: 50, y: 400 }
+            pos: { x: 100, y: 300 }
         },
     ],
 }
@@ -47,7 +47,6 @@ function getLineObjs(){
    return lines
 }
 
-// var gMeme.selectedLineidx = gMeme.selectedLineidx;
 
 // --- CONTROL PANEL ---
 
