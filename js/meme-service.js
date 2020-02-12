@@ -60,11 +60,11 @@ function setFontSize(diff) {
 function setTextPos(diff) {
     gMeme.lines[gMeme.selectedLineidx].pos.y += diff
 }
-function getFontSize() {
-    return gMeme.lines[gMeme.selectedLineidx].size;
+function getFontSize(line) {
+    return gMeme.lines[line].size;
 }
-function getTextPos() {
-    return gMeme.lines[gMeme.selectedLineidx].pos
+function getTextPos(line) {
+    return gMeme.lines[line].pos
 }
 
 

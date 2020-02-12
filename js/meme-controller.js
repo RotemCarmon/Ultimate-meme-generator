@@ -12,20 +12,53 @@ function onInit() {
     showImages()
 
 }
+
 function addEventListeners() {
     var firstText = document.querySelector('.first-input');
     var secondText = document.querySelector('.second-input');
-    firstText.addEventListener('keyup', (event) =>{
-        console.log(event.keyCode)
+    firstText.addEventListener('keyup', (event) => {
+        // console.log(event.keyCode)
         // if()
         onTextInput()
     });
     secondText.addEventListener('keyup', () => {
-        onTextInput()    
+        onTextInput()
     });
-    firstText.addEventListener('focus',() => onSetLine(1));
-    secondText.addEventListener('focus',() => onSetLine(2));
+    firstText.addEventListener('focus', () => onSetLine(1));
+    secondText.addEventListener('focus', () => onSetLine(2));
+    gCanvas.addEventListener('click', () => clickOnText(event))
 }
+
+
+function clickOnText(ev) {
+    var ex = ev.offsetX;
+    var ey = ev.offsetY;
+    var firstText = document.querySelector('.first-input').value;
+    var secondText = document.querySelector('.second-input').value
+
+    var pos1 = getTextPos(0)
+    var pos2 = getTextPos(1)
+    var textWidth1 = gCtx.measureText(firstText).width
+    var textWidth2 = gCtx.measureText(secondText).width
+    var textHeight1 = getFontSize(0);
+    var textHeight2 = getFontSize(1);
+
+    if (
+        ex > pos1.x
+        && ex < pos1.x + textWidth1
+        && ey > pos1.y - textHeight1
+        && ey < pos1.y) {
+        console.log('Succsesssss!!!!!    pos 1')
+    } else if (
+        ex > pos2.x
+        && ex < pos2.x + textWidth2
+        && ey > pos2.y - textHeight2
+        && ey < pos2.y) {
+        console.log('Succsesssss!!!!!    pos 2')
+
+    }
+}
+
 
 // --- IMAGE GALLERY --- 
 
@@ -109,18 +142,3 @@ function renderTexts() {
     )
 }
 
-// function onBackspacePress(ev) {
-//     if (ev.keyCode === 8) {
-//         var firstTextBox = document.getElementById('first-text');
-//         var txt = firstTextBox.value;
-//         updateTextLine(txt)
-//         var text = getText()
-//         console.log(text)
-//     }
-//     return
-// }
-
-// function onClearText() {
-//     onDarwImg()
-
-// }
