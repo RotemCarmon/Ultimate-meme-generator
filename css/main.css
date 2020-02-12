@@ -1,3 +1,69 @@
+/* Base */
+*{
+    box-sizing: border-box;
+}
+
 body{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif
+}
+
+h1,h2,h3,h4,h5,h6{
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Main */
+.container{
+    width: 980px;
+    padding: 0 20px;
+    margin: 0 auto;
     background-color: tan;
 }
+
+/* Header */
+header{
+    height: 60px;
+}
+
+/* Image Gallery */
+
+
+/* Meme */
+
+canvas{
+    
+    border: 1px solid black;
+}
+/* Layout */
+
+
+/* Helpers */
+
+.border{
+    border: 1px solid black;
+}
+
+/* Layout Helpers */
+.flex{
+    display: flex;
+}
+.grid{
+    display: grid;
+}
+.flex.row{
+    flex-direction: row;
+}
+.flex.column{
+    flex-direction: column;
+}
+.flex.justify-center{
+    justify-content: center;
+}
+.flex.align-center{
+    align-items: center;
+}
+
+
+
+

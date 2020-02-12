@@ -6,11 +6,29 @@
     <title>Ultimate meme creator</title>
     <link rel="stylesheet" href="css/main.css">
 </head>
-<body>
-    <h1>Image Generator</h1>
-    
+<body onload="onInit()">
+    <header class="flex justify-center align-center">
+        <h1>Image Generator</h1>
+    </header>
+    <div class="main-container container">
+        
+        <div class="img-gallery-container">
+            <div class="img-gallery">
+                <img src="img/1.jpg/">
+            </div>
+        </div>
 
-    <script src="js/meme-service.js"></script>
-    <script src="js/meme-controller.js"></script>
+
+
+    <div class="meme-container">
+        <canvas id="meme-canvas" width="500" height="500"></canvas>
+    </div>
+    
+    <footer>
+
+    </footer>
+        <script src="js/meme-service.js"></script>
+        <script src="js/meme-controller.js"></script>
+    </div>
 </body>
 </html>
