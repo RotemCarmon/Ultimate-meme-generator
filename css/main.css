@@ -23,6 +23,9 @@ a{
     text-decoration: none;
     color: unset;
 }
+img{
+    margin: 0;
+}
 
 
 /* Main */
@@ -62,7 +65,13 @@ header{
 /* Image Gallery */
     .img-gallery img{
         width: 150px;
-        margin: 0 15px;
+        margin: 15px 15px;
+    }
+
+    .img-gallery{
+        display: grid;
+        grid-auto-rows: 180px;
+        grid-template-columns :repeat(5 ,1fr) ;
     }
 
 /* Meme */
@@ -114,6 +123,9 @@ canvas{
 .clean-list{
     list-style-type: none;
     margin: 0;
+}
+.pointer:hover{
+    cursor: pointer;
 }
 
 

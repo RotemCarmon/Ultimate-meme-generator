@@ -68,7 +68,7 @@ function showImages() {
     var imgGallery = getImageGallery()
     var strHTMLs =
         imgGallery.map(img => {
-            return `<img src="${img.url}" alt="" data-img="${img.id}" onclick="onImgSelect(this)">`
+            return `<img src="${img.url}" alt="" data-img="${img.id}" class="image pointer" onclick="onImgSelect(this)">`
         }).join('');
     var elGallery = document.querySelector('.img-gallery');
     elGallery.innerHTML = strHTMLs;
