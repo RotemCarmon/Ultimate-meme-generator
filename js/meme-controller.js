@@ -18,7 +18,7 @@ function addEventListeners() {
     var secondText = document.querySelector('.second-input');
     firstText.addEventListener('keyup', () => {
         onTextInput()
-        
+
     });
     secondText.addEventListener('keyup', () => {
         onTextInput()
@@ -26,20 +26,23 @@ function addEventListeners() {
     firstText.addEventListener('focus', () => onSetLine(1));
     secondText.addEventListener('focus', () => onSetLine(2));
     gCanvas.addEventListener('click', () => clickOnText(event))
+
+
 }
 
-function toggleNavbar(elBtn){
-    var elNavbar = document.querySelector('.navbar-container')
 
-    if(elNavbar.style.display !== 'flex'){
-        elNavbar.style.display ='flex'
+
+function toggleNavbar(elBtn) {
+
+    if (elBtn.classList.contains('fa-bars')) {
         elBtn.classList.remove('fa-bars')
         elBtn.classList.add('fa-times')
-        console.log(elNavbar)
-    } else{
-        elNavbar.style.display ='none'
+        document.body.classList.add('burger')
+    } else {
         elBtn.classList.remove('fa-times')
         elBtn.classList.add('fa-bars')
+        document.body.classList.remove('burger')
+
     }
 }
 
@@ -107,7 +110,7 @@ function toggleDisplay() {
         elMeme.style.display = 'flex'
     } else {
         elGallery.style.display = 'grid'
-        elMeme.style.display = 'none'  
+        elMeme.style.display = 'none'
     }
 }
 

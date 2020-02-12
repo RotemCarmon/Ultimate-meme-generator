@@ -35,7 +35,7 @@ img{
 /* Main */
 .container{
     width: 1020px;
-    padding: 0 20px;
+    padding: 20px;
     margin: 0 auto;
     background-color: #fcf8e8;
 }
@@ -49,7 +49,15 @@ header{
     background-color: #ecb390;
 }
 
-h1 span{
+header p{
+    display: none;
+}
+
+.navbar-container{
+    display: flex;
+}
+
+header span{
     font-size: 4rem;
 }
 .nav-bar li{
@@ -81,12 +89,13 @@ header .menu-btn{
 
 .img-gallery img{
     width: 150px;    
-    margin: 15px 15px;
+    /* margin: 15px 15px; */
 }
 
 .img-gallery{
     display: grid;
-    grid-template-columns: repeat(auto-fill , minmax(170px , 1fr)) ;
+    grid-template-columns: repeat(auto-fill , minmax(150px , 1fr)) ;
+    gap:15px;
 }
 
 /* Meme */
@@ -153,7 +162,7 @@ footer{
 
 @media (max-width: 1060px){
     .container{
-        width: 800px;
+        width: 720px;
         padding: 0 10px;
     }
     
@@ -170,7 +179,7 @@ footer{
 
 @media (max-width: 800px){
     .container{
-        width: 600px;
+        width: 500px;
     }
     .meme-container{
         flex-direction: column;
@@ -182,17 +191,25 @@ footer{
 }
 
 @media (max-width: 620px){
-    
-    
+    header{
+        position: relative;
+    }
+
+    .img-gallery{
+        grid-template-columns: repeat(auto-fill , minmax(150px , 1fr)) ;
+        gap: 5px;
+    }
     .container{
         
-        min-width: 500px;
+        min-width: 470px;
         padding: 5px 5px ; 
         margin: 0 auto;
     }
-    header{
-        
+
+    .burger .navbar-container{
+        display: flex;
     }
+    
     .navbar-container{
         display: none;
         position: absolute;
@@ -220,10 +237,39 @@ footer{
         width: 400px;
     }
     .meme-container{
+
         margin: 0;
         align-content: center;
     }
     header .menu-btn{
         display: inline-block;
     }
+    header{
+        min-width: 450px;
+    }
+   
+}
+
+@media (max-width:510px){
+    header{
+        min-width: 300px;
+    }
+    header h1{
+        display: none;
+    }
+    header p{
+        display: block;
+        font-size: 4rem;
+        font-weight: 700;
+    }
+    
+    
+    .container{
+        min-width: 300px;
+        width:300px;
+    }
+   .img-gallery{
+    grid-template-columns: repeat(2 , 1fr) ;
+    gap: 5px;
+   }
 }
