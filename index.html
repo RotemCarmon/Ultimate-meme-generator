@@ -41,9 +41,9 @@
                     <div class="button set-line fa fa-sort" onclick="onSetLine()"></div>
                     <div class="button add-line fa fa-plus" onclick="onAddLine()"></div>
                     <div class="button remove-line fa fa-trash" onclick="onRemoveLine()"></div>
-                    <input type="color" name="stroke" id="stroke">
-                    <input type="color" name="fill" id="fill" value="#ffffff">
-                    <select list="fonts" value="Impact" class="font-list">
+                    <input type="color" title="Stroke" name="stroke" id="stroke" onchange="onSetStrokeColor(this.value)">
+                    <input type="color" title="Fill" name="fill" id="fill" value="#ffffff" onchange="onSetFillColor(this.value)">
+                    <select list="fonts" value="Impact" class="font-list" onchange="onSetFont(this.value)">
                     <!-- <datalist id="fonts" > -->
                         <option value="Impact">Impact </option>
                         <option value="cursive">Cursive</option>

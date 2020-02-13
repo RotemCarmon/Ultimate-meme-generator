@@ -145,7 +145,6 @@ function onRemoveLine(){
 
 function onTextInput() {
     console.log('IM HERE')
-    // var line = getCurrLine();
     var firstTextBox = document.getElementById('first-text');
     var txt = firstTextBox.value;
     updateTextLine(txt);
@@ -163,6 +162,19 @@ function onSetTextPos(diff) {
 }
 function onAddLine(){
     createLine()
+    renderImg()
+}
+
+function onSetStrokeColor(value){
+    setStrokeColor(value)
+    renderImg()
+}
+function onSetFillColor(value){
+    setFillColor(value)
+    renderImg()
+}
+function onSetFont(value){
+    setFont(value)
     renderImg()
 }
 
@@ -185,10 +197,11 @@ function renderText() {
 
         var txt = (line.txt).toUpperCase();
         var size = line.size
-        var txtPos = line.pos
-        gCtx.font = size + 'px IMPACT';
-        gCtx.fillStyle = '#ffffff'
-        gCtx.strokeStyle = '#000000'
+        var txtPos = line.pos;
+        var txtFont = line.font;
+        gCtx.font = size + 'px ' + txtFont;
+        gCtx.strokeStyle = line.color;
+        gCtx.fillStyle = line.fillColor;
         gCtx.textAlign = line.align;
         gCtx.strokeText(txt, txtPos.x, txtPos.y)
         gCtx.fillText(txt, txtPos.x, txtPos.y)

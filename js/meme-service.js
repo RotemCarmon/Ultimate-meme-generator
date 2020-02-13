@@ -107,18 +107,18 @@ var gMeme = {
             txt: 'ENTER TEXT HERE',
             size: 35,
             align: 'left',
-            color: 'red',
+            color: 'Black',
             fillColor: 'white',
-            font:'Impact',
+            font: 'Impact',
             pos: { x: 100, y: 80 }
         },
         {
             txt: 'ENTER TEXT HERE',
             size: 45,
             align: 'left',
-            color: 'blue',
+            color: 'Black',
             fillColor: 'white',
-            font:'Impact',
+            font: 'Impact',
             pos: { x: 100, y: 400 }
         },
     ],
@@ -150,24 +150,38 @@ function createLine() {
         txt: 'ENTER TXET HERE',
         size: 35,
         align: 'left',
-        color: 'blue',
-        fillColor: 'white',
-        font:'Impact',
+        color: getStrokeColor(),
+        fillColor: getFillColor(),
+        font: getFont(),
         pos: { x: 100, y: setY }
     }
     gMeme.lines.push(newLine)
+    gMeme.selectedLineidx = gMeme.lines.length - 1;
 }
-
 function removeLine() {
     var line = gMeme.selectedLineidx;
     gMeme.lines.splice(line, 1)
 }
-
 function getText() {
     return gMeme.lines[gMeme.selectedLineidx].txt.toUpperCase();
 }
-function getTextAlign() {
-    return gMeme.lines[gMeme.selectedLineidx].align;
+function setStrokeColor(value) {
+    gMeme.lines[gMeme.selectedLineidx].color = value;
+}
+function setFillColor(value) {
+    gMeme.lines[gMeme.selectedLineidx].fillColor = value;
+}
+function setFont(value) {
+    gMeme.lines[gMeme.selectedLineidx].font = value;
+}
+function getStrokeColor() {
+    return gMeme.lines[gMeme.selectedLineidx].color;
+}
+function getFillColor() {
+    return gMeme.lines[gMeme.selectedLineidx].fillColor;
+}
+function getFont() {
+    return gMeme.lines[gMeme.selectedLineidx].font;
 }
 
 // --- IMAGE GALLERY ---
@@ -191,6 +205,7 @@ function getImg() {
 // --- SEARCH ---
 
 // TODO - Array of keywords objects contains keyword and num of times it've been search
+
 
 // --- Utils ---
 
