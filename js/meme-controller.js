@@ -21,7 +21,7 @@ function addEventListeners() {
         onTextInput()
     });
     // window.addEventListener('resize', onResize)
-  
+
     // firstText.addEventListener('focus', () => onSetLine(1));
     // secondText.addEventListener('focus', () => onSetLine(2));
     // gCanvas.addEventListener('click', () => clickOnText(event))
@@ -107,7 +107,7 @@ function onImgSelect(img) {
 }
 
 function toggleDisplay(page) {
-    if(gCurrPage === page)return
+    if (gCurrPage === page) return
     var elMeme = document.querySelector('.meme-container')
     var elGallery = document.querySelector('.img-gallery')
     if (elMeme.style.display !== 'flex') {
@@ -137,12 +137,10 @@ function renderInputValue(txt) {
     var elInput = document.querySelector('.first-input')
     elInput.value = txt;
 }
-function onRemoveLine(){
-    removeLine()    
+function onRemoveLine() {
+    removeLine()
     renderImg()
-
 }
-
 function onTextInput() {
     console.log('IM HERE')
     var firstTextBox = document.getElementById('first-text');
@@ -150,32 +148,34 @@ function onTextInput() {
     updateTextLine(txt);
     renderImg()
 }
-
 function onSetFontSize(diff) {
     setFontSize(diff)
     renderImg()
 }
-
 function onSetTextPos(diff) {
     setTextPos(diff)
     renderImg()
 }
-function onAddLine(){
+function onAddLine() {
     createLine()
     renderImg()
 }
-
-function onSetStrokeColor(value){
+function onSetStrokeColor(value) {
     setStrokeColor(value)
     renderImg()
 }
-function onSetFillColor(value){
+function onSetFillColor(value) {
     setFillColor(value)
     renderImg()
 }
-function onSetFont(value){
+function onSetFont(value) {
     setFont(value)
     renderImg()
+}
+function onDownload(elLink){
+    const data = gCanvas.toDataURL('image/jpeg');
+    elLink.href = data;
+    elLink.download = 'img';
 }
 
 // --- MEME EDITOR ---
@@ -194,7 +194,6 @@ function renderImg() {
 function renderText() {
     var linesObjs = getLineObjs();
     linesObjs.map(line => {
-
         var txt = (line.txt).toUpperCase();
         var size = line.size
         var txtPos = line.pos;
@@ -208,4 +207,3 @@ function renderText() {
     }
     )
 }
-
