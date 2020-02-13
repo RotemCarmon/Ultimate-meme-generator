@@ -215,7 +215,6 @@ function getIsDragging() {
 
 
 function upDatePos(delta){
-    // debugger
     var currDragging = getIsDragging()
     var prevPos = gMeme.lines[currDragging].pos
     console.log('delta',delta);

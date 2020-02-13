@@ -1,10 +1,13 @@
 'use strict';
 
 
+// --- GLOBALS ---
+
 var gCanvas;
 var gCtx
 var gCurrPage;
-
+var gMouseStartPos;
+var gMousePrevPos;
 
 function onInit() {
     gCanvas = document.getElementById('meme-canvas');
@@ -13,74 +16,66 @@ function onInit() {
     showImages()
     findAllPosses()
 }
-
-
 function addEventListeners() {
     var firstText = document.querySelector('.first-input');
     firstText.addEventListener('keyup', () => {
+        ev.preventDefault()
+        ev.stopPropagation()
         onTextInput()
     });
-    window.addEventListener('resize', onResize)
+    gCanvas.addEventListener('click', (ev) => {
+        MarkText(ev);
+    })
     gCanvas.addEventListener('mousedown', (ev) => {
-        MarkText(event);
+        ev.preventDefault()
+        ev.stopPropagation()
         dragAndDrop(ev)
     })
-    
-}
-var mouseStartPos;
-function dragAndDrop(ev) {
-    ev.preventDefault()
-    ev.stopPropagation()
-    gCanvas.addEventListener('mouseup', (ev) => {drop(ev)})
-    startDrag(ev)
-    
+    gCanvas.addEventListener('mouseup', (ev) => {
+        ev.preventDefault()
+        ev.stopPropagation()
+        drop(ev)
+    })
+
+
 }
 
-function startDrag(ev) {
-    console.log(ev.type)
-    ev.preventDefault()
-    ev.stopPropagation()
+function dragAndDrop(ev) {
     setIsDragging(ev)
-    mouseStartPos = { x: ev.offsetX, y: ev.offsetY }
+    gMouseStartPos = { x: ev.offsetX, y: ev.offsetY }
+    gMousePrevPos = null;
+    gCanvas.addEventListener('mousemove', function (ev) {
+        ev.preventDefault()
+        ev.stopPropagation()
+        whileDrag(ev)
+    })
 }
+
+function whileDrag(ev) {
+    if (!gMousePrevPos) gMousePrevPos = gMouseStartPos
+    var mouseCurrPos = { x: ev.offsetX, y: ev.offsetY }
+    var delta = {
+        x: mouseCurrPos.x - gMousePrevPos.x,
+        y: mouseCurrPos.y - gMousePrevPos.y
+    }
+
+    upDatePos(delta)
+    renderImg()
+    gMousePrevPos = mouseCurrPos
+}
+
 function drop(ev) {
-    console.log(ev.type)
-    ev.preventDefault()
-    ev.stopPropagation()
     var mouseEndPos = { x: ev.offsetX, y: ev.offsetY }
     var delta = {
-        x: mouseEndPos.x - mouseStartPos.x,
-        y: mouseEndPos.y - mouseStartPos.y
+        x: mouseEndPos.x - gMousePrevPos.x,
+        y: mouseEndPos.y - gMousePrevPos.y
     }
-    gCanvas.removeEventListener('mouseup', drop)
-    // console.log('delta ',delta);
     upDatePos(delta)
     renderImg()
     findAllPosses()
-    // delta = {}
-    // mouseStartPos ={}
-}
-
-
-// function checkSizeOnLoad(){
-//     if(window.innerWidth < 600) onResize()
-//     // location.reload()
-// }
-
-
-function onResize() {
-    // console.log('I\'ve been resized')
-    var elCanvasContainer = document.querySelector('.canvas-container')
-    // console.dir(elCanvasContainer)
-    if (window.innerWidth < 600) {
-        gCanvas.width = elCanvasContainer.offsetWidth
-        gCanvas.height = elCanvasContainer.offsetHeight
-        renderImg()
-    }
 }
 
 function toggleNavbar(elBtn) {
-
     if (elBtn.classList.contains('fa-bars')) {
         elBtn.classList.remove('fa-bars')
         elBtn.classList.add('fa-times')
@@ -93,13 +88,8 @@ function toggleNavbar(elBtn) {
     }
 }
 
-// TODO - make function look nicer run with a loop
-
-
-// var gMarked;
 function MarkText(ev) {
     var txtPressed = getClickedTextPos(ev)
-    // console.log('txt pressed', txtPressed);  
     if (txtPressed < 0) return
     var marked = checkMark(txtPressed)
     if (marked) return
@@ -107,7 +97,6 @@ function MarkText(ev) {
     setCurrLine(txtPressed)
     renderImg()
 }
-
 
 
 // --- IMAGE GALLERY --- 
@@ -148,14 +137,13 @@ function toggleDisplay(page) {
 
 // TODO - when a nav button is pressed it can't be repressed
 
+
 // --- CONTROL PANEL ---
 function onSetLine() {
     setCurrLine()
     var txt = getText()
     updateInputValue(txt)
 }
-
-
 function updateInputValue(txt) {
     var elInput = document.querySelector('.first-input')
     elInput.value = txt;
@@ -209,7 +197,6 @@ function renderImg() {
     img.onload = () => {
         gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height)
         renderText()
-        // findAllPosses()
 
     }
 }
@@ -229,7 +216,7 @@ function renderText() {
         gCtx.fillText(txt, txtPos.x, txtPos.y)
         if (line.isMarked) markBox(idx)
 
-    },
+    }
     )
 }
 function markBox(idx) {
