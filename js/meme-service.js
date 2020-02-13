@@ -95,38 +95,31 @@ var gImgs = [
         url: './img/18.jpg',
         keywords: ['cute, dog, baby']
     },
-   
+
 ]
 
 var gMeme = {
     selectedImgId: 0,
     selectedLineidx: 0,
-    
+
     lines: [
         {
-            txt: '',
-            size: 40,
-            align: 'left',
-            color: 'red',
-            pos: { x: 50, y: 80 }
-        },
-        {
-            txt: '',
+            txt: 'ENTER TEXT HERE',
             size: 35,
             align: 'left',
+            color: 'red',
+            pos: { x: 100, y: 80 }
+        },
+        {
+            txt: 'ENTER TEXT HERE',
+            size: 45,
+            align: 'left',
             color: 'blue',
-            pos: { x: 100, y: 300 }
+            pos: { x: 100, y: 400 }
         },
     ],
 }
 
-
-
-
-function getLineObjs(){
-    var lines = gMeme.lines
-   return lines
-}
 
 
 // --- CONTROL PANEL ---
@@ -146,7 +139,30 @@ function getFontSize(line) {
 function getTextPos(line) {
     return gMeme.lines[line].pos
 }
+function createLine() {
+    var numOfLines = gMeme.lines.length;
+    var setY = 60 * numOfLines
+    var newLine = {
+        txt: 'ENTER TXET HERE',
+        size: 35,
+        align: 'left',
+        color: 'blue',
+        pos: { x: 100, y: setY }
+    }
+    gMeme.lines.push(newLine)
+}
 
+function removeLine() {
+    var line = gMeme.selectedLineidx;
+    gMeme.lines.splice(line, 1)
+}
+
+function getText() {
+    return gMeme.lines[gMeme.selectedLineidx].txt.toUpperCase();
+}
+function getTextAlign() {
+    return gMeme.lines[gMeme.selectedLineidx].align;
+}
 
 // --- IMAGE GALLERY ---
 
@@ -162,24 +178,29 @@ function getImageGallery() {
 function getImg() {
     return gImgs[gMeme.selectedImgId];
 }
-function getText() {
-    return gMeme.lines[gMeme.selectedLineidx].txt.toUpperCase();
-}
-function getTextAlign() {
-    return gMeme.lines[gMeme.selectedLineidx].align;
-}
 
-
-function setCurrLine(line) {
-    if(line < 1) line = 1
-    gMeme.selectedLineidx = ( line - 1);
-}
-function getCurrLine() {
-    return gMeme.selectedLineidx;
-}
 
 
 
 // --- SEARCH ---
 
 // TODO - Array of keywords objects contains keyword and num of times it've been search
+
+// --- Utils ---
+
+
+function getLineObjs() {
+    var lines = gMeme.lines
+    return lines
+}
+function setCurrLine() {
+    var linesLength = gMeme.lines.length;
+    if (gMeme.selectedLineidx < linesLength - 1) {
+        gMeme.selectedLineidx++
+    } else {
+        gMeme.selectedLineidx = 0;
+    }
+}
+function getCurrLine() {
+    return gMeme.selectedLineidx;
+}

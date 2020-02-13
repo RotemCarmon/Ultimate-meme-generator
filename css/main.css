@@ -112,6 +112,51 @@ canvas{
     margin: 10px;
     padding: 10px 12px;
 }
+.buttons .font-list{
+    margin: 10px;
+    padding: 10px 12px;
+    width: 100px;
+    height: 45px;
+    grid-row: 2/3;
+    grid-column: 4/6;
+}
+
+.control-panel{
+    grid-template-rows: repeat(4  ,1fr);
+    /* grid-template-columns: repeat(6  ,1fr); */
+}
+
+.first-input{
+    grid-row: 1/2;
+    grid-column: 1 /-1;
+}
+.second-input{
+    
+    grid-row: 3/4;
+    grid-column: 1 /-1;
+}
+
+.buttons{
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.button{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+}
+.buttons input{
+    margin: 10px;
+    width: 45px;
+    height: 45px;
+
+}
+
 
 /* Footer */
 footer{
@@ -168,11 +213,13 @@ footer{
     
     input{
         height: 2rem;
-        width: 14rem;
-        margin: 1.5rem 2rem;
+        width: 12rem;
+        margin: 15px 5px;
     }
     .buttons{
         margin: 5px;
+        /* display: none; */
+        grid-template-columns: 1fr 1fr;
     }
     
 }
@@ -186,6 +233,28 @@ footer{
         width: 500px;
         margin: 0 auto;
         padding: 10px 0;
+    }
+
+    .control-panel{
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .first-input{
+        grid-row: 1/2;
+        grid-column: 1 /2;
+    }
+    .second-input{
+        
+        grid-row: 1/2;
+        grid-column: 2 /3;
+    }
+    .buttons{
+        grid-row: 2/3 ;
+        grid-column: 1/-1;
+
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: repeat(6, 1fr);
     }
     
 }
