@@ -108,6 +108,8 @@ var gMeme = {
             size: 35,
             align: 'left',
             color: 'red',
+            fillColor: 'white',
+            font:'Impact',
             pos: { x: 100, y: 80 }
         },
         {
@@ -115,6 +117,8 @@ var gMeme = {
             size: 45,
             align: 'left',
             color: 'blue',
+            fillColor: 'white',
+            font:'Impact',
             pos: { x: 100, y: 400 }
         },
     ],
@@ -147,6 +151,8 @@ function createLine() {
         size: 35,
         align: 'left',
         color: 'blue',
+        fillColor: 'white',
+        font:'Impact',
         pos: { x: 100, y: setY }
     }
     gMeme.lines.push(newLine)

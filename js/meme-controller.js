@@ -3,6 +3,7 @@
 
 var gCanvas;
 var gCtx
+var gCurrPage;
 
 
 function onInit() {
@@ -14,12 +15,12 @@ function onInit() {
 }
 
 
-// TODO - Should take data on 2 texts from one input box
 function addEventListeners() {
     var firstText = document.querySelector('.first-input');
     firstText.addEventListener('keyup', () => {
         onTextInput()
     });
+    // window.addEventListener('resize', onResize)
   
     // firstText.addEventListener('focus', () => onSetLine(1));
     // secondText.addEventListener('focus', () => onSetLine(2));
@@ -27,7 +28,12 @@ function addEventListeners() {
 
 }
 
+// function onResize(){
 
+//     gCanvas.width = elContainer.offsetWidth
+//     gCanvas.height = elContainer.offsetHeight
+
+// }
 
 function toggleNavbar(elBtn) {
 
@@ -96,21 +102,20 @@ function showImages() {
 function onImgSelect(img) {
     var selectedImgId = img.dataset.img;
     updateCurrImgId(selectedImgId)
-    toggleDisplay()
+    toggleDisplay('meme')
     renderImg()
 }
 
 function toggleDisplay(page) {
-    var currPage = 'gallery'    
-    if(currPage === page)return
+    if(gCurrPage === page)return
     var elMeme = document.querySelector('.meme-container')
     var elGallery = document.querySelector('.img-gallery')
     if (elMeme.style.display !== 'flex') {
-        currPage = 'gallery'
+        gCurrPage = 'meme'
         elGallery.style.display = 'none'
         elMeme.style.display = 'flex'
     } else {
-        currPage = 'meme'
+        gCurrPage = 'gallery'
         elGallery.style.display = 'grid'
         elMeme.style.display = 'none'
     }
