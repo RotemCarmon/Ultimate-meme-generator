@@ -95,6 +95,10 @@ header .menu-btn {
 }
 
 /* Image Gallery */
+.second-page{
+    height: 300px;
+}
+
 
 .img-gallery {
     display: grid;
@@ -104,7 +108,7 @@ header .menu-btn {
 
 .img-gallery img {
     width: 150px;
-    transition: .4s;
+    transition: .4s ;
 }
 
 .img-gallery img:hover {
@@ -119,6 +123,11 @@ canvas {
 }
 
 /* Control Panel */
+
+.round{
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px 0 #df7861;
+}
 
 .buttons .font-list {
     margin: 10px;
