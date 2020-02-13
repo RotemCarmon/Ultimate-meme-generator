@@ -284,6 +284,10 @@ footer {
     header {
         position: relative;
     }
+    .canvas-container{
+        width: 400px;
+        height: 400px;
+    }
     .img-gallery {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 5px;

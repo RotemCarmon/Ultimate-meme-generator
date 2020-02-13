@@ -11,6 +11,7 @@ function onInit() {
     gCtx = gCanvas.getContext('2d');
     addEventListeners()
     showImages()
+    // checkSizeOnLoad()
 
 }
 
@@ -20,20 +21,27 @@ function addEventListeners() {
     firstText.addEventListener('keyup', () => {
         onTextInput()
     });
-    // window.addEventListener('resize', onResize)
-
-    // firstText.addEventListener('focus', () => onSetLine(1));
-    // secondText.addEventListener('focus', () => onSetLine(2));
-    // gCanvas.addEventListener('click', () => clickOnText(event))
+    window.addEventListener('resize', onResize)
+    gCanvas.addEventListener('click', () => clickOnText(event))
 
 }
+// function checkSizeOnLoad(){
+//     if(window.innerWidth < 600) onResize()
+//     // location.reload()
 
-// function onResize(){
-
-//     gCanvas.width = elContainer.offsetWidth
-//     gCanvas.height = elContainer.offsetHeight
 
 // }
+
+function onResize() {
+    // console.log('I\'ve been resized')
+    var elCanvasContainer = document.querySelector('.canvas-container')
+    // console.dir(elCanvasContainer)
+    if (window.innerWidth < 600) {
+        gCanvas.width = elCanvasContainer.offsetWidth
+        gCanvas.height = elCanvasContainer.offsetHeight
+        renderImg()
+    }
+}
 
 function toggleNavbar(elBtn) {
 
@@ -52,39 +60,27 @@ function toggleNavbar(elBtn) {
 // TODO - make function look nicer run with a loop
 
 
-// function clickOnText(ev) {
-//     var ex = ev.offsetX;
-//     var ey = ev.offsetY;
-//     var firstText = document.querySelector('.first-input').value;
-//     var secondText = document.querySelector('.second-input').value
+// var gMarked;
+function clickOnText(ev) {
+    var allPosses = findAllPosses()
+    var ex = ev.offsetX;
+    var ey = ev.offsetY;
+    var txtPressed = allPosses.findIndex(pos => {
+        return ex > +pos.x
+            && ex < +(pos.x + pos.width)
+            && ey > +(pos.y - pos.height)
+            && ey < +pos.y
+    })
+    // console.log('txt pressed', txtPressed);  
+    if (txtPressed < 0) return
+    var marked = checkMark(txtPressed)
+    if (marked) return
+    setMarked(txtPressed)
+    setCurrLine(txtPressed)
+    renderImg()
 
-//     var pos1 = getTextPos(0)
-//     var pos2 = getTextPos(1)
-//     var textWidth1 = gCtx.measureText(firstText).width
-//     var textWidth2 = gCtx.measureText(secondText).width
-//     var textHeight1 = getFontSize(0);
-//     var textHeight2 = getFontSize(1);
+}
 
-//     if (
-//         ex > pos1.x
-//         && ex < pos1.x + textWidth1
-//         && ey > pos1.y - textHeight1
-//         && ey < pos1.y) {
-//         gCtx.rect(pos1.x - 40, pos1.y - textHeight1 - 15, pos1.x + textWidth1 + 40, pos1.y + 5)
-//         gCtx.fillStyle = '#88a4b151';
-//         gCtx.fill()
-//         onSetLine(1)
-//     } else if (
-//         ex > pos2.x
-//         && ex < pos2.x + textWidth2
-//         && ey > pos2.y - textHeight2
-//         && ey < pos2.y) {
-//         gCtx.rect(pos2.x - 40, pos2.y - textHeight2 - 15, pos2.x + textWidth2 + 40, pos2.y + 5)
-//         gCtx.fillStyle = '#88a4b151';
-//         gCtx.fill()
-//         onSetLine(2)
-//     }
-// }
 
 // --- IMAGE GALLERY --- 
 
@@ -128,12 +124,11 @@ function toggleDisplay(page) {
 function onSetLine() {
     setCurrLine()
     var txt = getText()
-    console.log('text', txt);
-    renderInputValue(txt)
+    updateInputValue(txt)
 }
 
 
-function renderInputValue(txt) {
+function updateInputValue(txt) {
     var elInput = document.querySelector('.first-input')
     elInput.value = txt;
 }
@@ -142,7 +137,6 @@ function onRemoveLine() {
     renderImg()
 }
 function onTextInput() {
-    console.log('IM HERE')
     var firstTextBox = document.getElementById('first-text');
     var txt = firstTextBox.value;
     updateTextLine(txt);
@@ -172,7 +166,7 @@ function onSetFont(value) {
     setFont(value)
     renderImg()
 }
-function onDownload(elLink){
+function onDownload(elLink) {
     const data = gCanvas.toDataURL('image/jpeg');
     elLink.href = data;
     elLink.download = 'img';
@@ -193,7 +187,7 @@ function renderImg() {
 
 function renderText() {
     var linesObjs = getLineObjs();
-    linesObjs.map(line => {
+    linesObjs.forEach((line, idx) => {
         var txt = (line.txt).toUpperCase();
         var size = line.size
         var txtPos = line.pos;
@@ -204,6 +198,16 @@ function renderText() {
         gCtx.textAlign = line.align;
         gCtx.strokeText(txt, txtPos.x, txtPos.y)
         gCtx.fillText(txt, txtPos.x, txtPos.y)
-    }
+        if (line.isMarked) markBox(idx)
+
+    },
     )
+}
+function markBox(idx) {
+    var allPosses = findAllPosses()
+    var currPos = allPosses[idx];
+    gCtx.beginPath();
+    gCtx.rect(currPos.x - 10, currPos.y - currPos.height - 10, currPos.width + 20, currPos.height + 30);
+    gCtx.fillStyle = '#0077aa2e';
+    gCtx.fill()
 }

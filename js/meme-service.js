@@ -3,7 +3,8 @@
 
 // --- GLOBALS ---
 
-
+var gMarked;
+var gAllPosses;
 var gImgs = [
     {
         id: 0,
@@ -110,7 +111,8 @@ var gMeme = {
             color: 'Black',
             fillColor: 'white',
             font: 'Impact',
-            pos: { x: 100, y: 80 }
+            pos: { x: 100, y: 80 },
+            isMarked: false,
         },
         {
             txt: 'ENTER TEXT HERE',
@@ -119,7 +121,8 @@ var gMeme = {
             color: 'Black',
             fillColor: 'white',
             font: 'Impact',
-            pos: { x: 100, y: 400 }
+            pos: { x: 100, y: 400 },
+            isMarked: false,
         },
     ],
 }
@@ -137,11 +140,11 @@ function setFontSize(diff) {
 function setTextPos(diff) {
     gMeme.lines[gMeme.selectedLineidx].pos.y += diff
 }
-function getFontSize(line) {
-    return gMeme.lines[line].size;
+function getFontSize() {
+    return gMeme.lines[gMeme.selectedLineidx].size;
 }
-function getTextPos(line) {
-    return gMeme.lines[line].pos
+function getTextPos() {
+    return gMeme.lines[gMeme.selectedLineidx].pos
 }
 function createLine() {
     var numOfLines = gMeme.lines.length;
@@ -153,7 +156,9 @@ function createLine() {
         color: getStrokeColor(),
         fillColor: getFillColor(),
         font: getFont(),
-        pos: { x: 100, y: setY }
+        pos: { x: 100, y: setY },
+        isMarked: false,
+        
     }
     gMeme.lines.push(newLine)
     gMeme.selectedLineidx = gMeme.lines.length - 1;
@@ -214,7 +219,11 @@ function getLineObjs() {
     var lines = gMeme.lines
     return lines
 }
-function setCurrLine() {
+function setCurrLine(line) {
+    if(line >= 0){
+        gMeme.selectedLineidx = line;
+        return
+    }
     var linesLength = gMeme.lines.length;
     if (gMeme.selectedLineidx < linesLength - 1) {
         gMeme.selectedLineidx++
@@ -224,4 +233,42 @@ function setCurrLine() {
 }
 function getCurrLine() {
     return gMeme.selectedLineidx;
+}
+
+function getTextWidth(text, font) {
+
+    var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+    var context = canvas.getContext("2d");
+    context.font = font;
+    var metrics = context.measureText(text);
+    return metrics.width;
+}
+
+function findAllPosses() {
+    var allPosses = gMeme.lines.map(line => {
+        var txtPos = line.pos;
+        var textHeight = line.size;
+        var fullFont = `${line.size}px  ${line.font}`
+        var textWidth = getTextWidth(line.txt, fullFont)
+
+        return createPosObj(txtPos.x, txtPos.y, textWidth, textHeight)
+
+    })
+    gAllPosses = allPosses
+    return allPosses
+}
+
+function createPosObj(x, y, width, height) {
+    return {
+        x, y, width, height,
+    }
+}
+
+function setMarked(mark){
+    gMeme.lines.forEach(line => line.isMarked = false)
+    gMeme.lines[mark].isMarked = true;
+}
+
+function checkMark(txtPressed){
+    return gMeme.lines[txtPressed].isMarked;
 }
