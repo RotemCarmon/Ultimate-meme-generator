@@ -2,9 +2,9 @@
 
 
 // --- GLOBALS ---
-
 var gMarked;
 var gAllPosses;
+
 var gImgs = [
     {
         id: 0,
@@ -158,7 +158,7 @@ function createLine() {
         font: getFont(),
         pos: { x: 100, y: setY },
         isMarked: false,
-        
+
     }
     gMeme.lines.push(newLine)
     gMeme.selectedLineidx = gMeme.lines.length - 1;
@@ -195,7 +195,7 @@ function updateCurrImgId(id) {
     gMeme.selectedImgId = id
 }
 function getImageGallery() {
-    return gImgs
+    return gImgs;
 }
 
 // --- MEME EDITOR ---
@@ -204,9 +204,26 @@ function getImg() {
     return gImgs[gMeme.selectedImgId];
 }
 
+function setIsDragging(ev) {
+    var clickedText = getClickedTextPos(ev)
+    if (clickedText < 0) return
+    else gAllPosses[clickedText].isDragging = true
+}
+function getIsDragging() {
+    return gAllPosses.findIndex(pos => pos.isDragging === true)
+}
 
 
-
+function upDatePos(delta){
+    // debugger
+    var currDragging = getIsDragging()
+    var prevPos = gMeme.lines[currDragging].pos
+    console.log('delta',delta);
+    console.log('prevPos',prevPos);
+    var newPos = {x: prevPos.x + delta.x, y:prevPos.y + delta.y}
+    gMeme.lines[currDragging].pos = newPos;
+    console.log('new', newPos)
+}
 // --- SEARCH ---
 
 // TODO - Array of keywords objects contains keyword and num of times it've been search
@@ -220,7 +237,7 @@ function getLineObjs() {
     return lines
 }
 function setCurrLine(line) {
-    if(line >= 0){
+    if (line >= 0) {
         gMeme.selectedLineidx = line;
         return
     }
@@ -254,21 +271,45 @@ function findAllPosses() {
         return createPosObj(txtPos.x, txtPos.y, textWidth, textHeight)
 
     })
-    gAllPosses = allPosses
+    // console.log(allPosses)
+    gAllPosses = allPosses;
     return allPosses
+}
+
+
+function getAllPosses() {
+    return gAllPosses
 }
 
 function createPosObj(x, y, width, height) {
     return {
-        x, y, width, height,
+        x,
+        y,
+        width,
+        height,
+        isDragging: false
     }
 }
 
-function setMarked(mark){
+function setMarked(mark) {
     gMeme.lines.forEach(line => line.isMarked = false)
     gMeme.lines[mark].isMarked = true;
+    gMarked = mark;
 }
 
-function checkMark(txtPressed){
+function checkMark(txtPressed) {
     return gMeme.lines[txtPressed].isMarked;
+}
+
+function getClickedTextPos(ev) {
+    var allPosses = gAllPosses;
+    var ex = ev.offsetX;
+    var ey = ev.offsetY;
+    var txtPressed = allPosses.findIndex(pos => {
+        return ex > +pos.x
+            && ex < +(pos.x + pos.width)
+            && ey > +(pos.y - pos.height)
+            && ey < +pos.y
+    })
+    return txtPressed
 }

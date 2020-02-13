@@ -11,8 +11,7 @@ function onInit() {
     gCtx = gCanvas.getContext('2d');
     addEventListeners()
     showImages()
-    // checkSizeOnLoad()
-
+    findAllPosses()
 }
 
 
@@ -22,15 +21,52 @@ function addEventListeners() {
         onTextInput()
     });
     window.addEventListener('resize', onResize)
-    gCanvas.addEventListener('click', () => clickOnText(event))
-
+    gCanvas.addEventListener('mousedown', (ev) => {
+        MarkText(event);
+        dragAndDrop(ev)
+    })
+    
 }
+var mouseStartPos;
+function dragAndDrop(ev) {
+    ev.preventDefault()
+    ev.stopPropagation()
+    gCanvas.addEventListener('mouseup', (ev) => {drop(ev)})
+    startDrag(ev)
+    
+}
+
+function startDrag(ev) {
+    console.log(ev.type)
+    ev.preventDefault()
+    ev.stopPropagation()
+    setIsDragging(ev)
+    mouseStartPos = { x: ev.offsetX, y: ev.offsetY }
+}
+function drop(ev) {
+    console.log(ev.type)
+    ev.preventDefault()
+    ev.stopPropagation()
+    var mouseEndPos = { x: ev.offsetX, y: ev.offsetY }
+    var delta = {
+        x: mouseEndPos.x - mouseStartPos.x,
+        y: mouseEndPos.y - mouseStartPos.y
+    }
+    gCanvas.removeEventListener('mouseup', drop)
+    // console.log('delta ',delta);
+    upDatePos(delta)
+    renderImg()
+    findAllPosses()
+    // delta = {}
+    // mouseStartPos ={}
+}
+
+
 // function checkSizeOnLoad(){
 //     if(window.innerWidth < 600) onResize()
 //     // location.reload()
-
-
 // }
+
 
 function onResize() {
     // console.log('I\'ve been resized')
@@ -61,16 +97,8 @@ function toggleNavbar(elBtn) {
 
 
 // var gMarked;
-function clickOnText(ev) {
-    var allPosses = findAllPosses()
-    var ex = ev.offsetX;
-    var ey = ev.offsetY;
-    var txtPressed = allPosses.findIndex(pos => {
-        return ex > +pos.x
-            && ex < +(pos.x + pos.width)
-            && ey > +(pos.y - pos.height)
-            && ey < +pos.y
-    })
+function MarkText(ev) {
+    var txtPressed = getClickedTextPos(ev)
     // console.log('txt pressed', txtPressed);  
     if (txtPressed < 0) return
     var marked = checkMark(txtPressed)
@@ -78,8 +106,8 @@ function clickOnText(ev) {
     setMarked(txtPressed)
     setCurrLine(txtPressed)
     renderImg()
-
 }
+
 
 
 // --- IMAGE GALLERY --- 
@@ -181,6 +209,7 @@ function renderImg() {
     img.onload = () => {
         gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height)
         renderText()
+        // findAllPosses()
 
     }
 }
@@ -204,7 +233,7 @@ function renderText() {
     )
 }
 function markBox(idx) {
-    var allPosses = findAllPosses()
+    var allPosses = getAllPosses()
     var currPos = allPosses[idx];
     gCtx.beginPath();
     gCtx.rect(currPos.x - 10, currPos.y - currPos.height - 10, currPos.width + 20, currPos.height + 30);
