@@ -41,15 +41,18 @@
                     <div class="button set-line fa fa-sort" onclick="onSetLine()"></div>
                     <div class="button add-line fa fa-plus" onclick="onAddLine()"></div>
                     <div class="button remove-line fa fa-trash" onclick="onRemoveLine()"></div>
-                    <input type="color" title="Stroke" name="stroke" id="stroke" onchange="onSetStrokeColor(this.value)">
-                    <input type="color" title="Fill" name="fill" id="fill" value="#ffffff" onchange="onSetFillColor(this.value)">
+                    <input type="color" title="Stroke" name="stroke" id="stroke"
+                        onchange="onSetStrokeColor(this.value)">
+                    <input type="color" title="Fill" name="fill" id="fill" value="#ffffff"
+                        onchange="onSetFillColor(this.value)">
                     <select list="fonts" value="Impact" class="font-list" onchange="onSetFont(this.value)">
-                    <!-- <datalist id="fonts" > -->
                         <option value="Impact">Impact </option>
                         <option value="cursive">Cursive</option>
                         <option value="fantasy">fantasy</option>
                         <option value="Georgia">Georgia</option>
-                        </select>
+                    </select>
+                    <a href="#" onclick="onDownload(this)" download="" class="button fa fa-download"></a>
+
 
                 </div>
                 <!-- <input type="text" name="secondt-text" class="second-input" id="second-text" placeholder="Enter Text Here"> -->
