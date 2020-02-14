@@ -155,6 +155,7 @@ canvas {
 } */
 
 .buttons {
+    font-family: monospace;
     display: grid;
     grid-auto-rows: 65px;
     grid-template-columns: repeat(4, 1fr);
@@ -232,6 +233,14 @@ footer {
 .pointer:hover {
     cursor: pointer;
 }
+
+.center-center{
+    justify-self: center;
+    align-self: center;
+}
+
+
+/* MEDIA QUERIES */
 
 @media (max-width: 1060px) {
     .container {

@@ -36,14 +36,16 @@
                 <div class="buttons">
                     <div class="round button increase fa fa-font " onclick="onSetFontSize(1)">+</div>
                     <div class="round button decrease fa fa-font" onclick="onSetFontSize(-1)">-</div>
-                    <div class="round button up fa fa-arrow-up" onclick="onSetTextPos(-10)"></div>
-                    <div class="round button down fa fa-arrow-down" onclick="onSetTextPos(10)"></div>
-                    <div class="round button set-line fa fa-sort" onclick="onSetLine()"></div>
+                    <div class="round button  fa " onclick="onAlignLeft()">L</div>
+                    <div class="round button  fa " onclick="onAlignCenter()">C</div>
+                    <div class="round button  fa " onclick="onAlignRight()">R</div>
+                    <!-- <div class="round button up fa fa-arrow-up" onclick="onSetTextPos(-10)"></div>
+                    <div class="round button down fa fa-arrow-down" onclick="onSetTextPos(10)"></div> -->
                     <div class="round button add-line fa fa-plus" onclick="onAddLine()"></div>
                     <div class="round button remove-line fa fa-trash" onclick="onRemoveLine()"></div>
-                    <input class="round" type="color" title="Stroke" name="stroke" id="stroke"
+                    <label for="stroke" class="center-center">Line</label><input class="round" type="color" title="Stroke" name="stroke" id="stroke"
                         onchange="onSetStrokeColor(this.value)">
-                    <input class="round" type="color" title="Fill" name="fill" id="fill" value="#ffffff"
+                    <label for="fill" class="center-center">Fill</label><input class="round" type="color" title="Fill" name="fill" id="fill" value="#ffffff"
                         onchange="onSetFillColor(this.value)">
                     <select list="fonts" value="Impact" class="round font-list" onchange="onSetFont(this.value)">
                         <option value="Impact">Impact </option>

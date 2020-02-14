@@ -18,13 +18,13 @@ function onInit() {
 }
 function addEventListeners() {
     var firstText = document.querySelector('.first-input');
-    firstText.addEventListener('keyup', () => {
+    firstText.addEventListener('keyup', (ev) => {
         ev.preventDefault()
         ev.stopPropagation()
         onTextInput()
     });
     gCanvas.addEventListener('click', (ev) => {
-        MarkText(ev);
+        OnPressText(ev);
     })
     gCanvas.addEventListener('mousedown', (ev) => {
         ev.preventDefault()
@@ -34,68 +34,11 @@ function addEventListeners() {
     gCanvas.addEventListener('mouseup', (ev) => {
         ev.preventDefault()
         ev.stopPropagation()
+        findAllPosses()
         drop(ev)
     })
 
 
-}
-
-function dragAndDrop(ev) {
-    setIsDragging(ev)
-    gMouseStartPos = { x: ev.offsetX, y: ev.offsetY }
-    gMousePrevPos = null;
-    gCanvas.addEventListener('mousemove', function (ev) {
-        ev.preventDefault()
-        ev.stopPropagation()
-        whileDrag(ev)
-    })
-}
-
-function whileDrag(ev) {
-    if (!gMousePrevPos) gMousePrevPos = gMouseStartPos
-    var mouseCurrPos = { x: ev.offsetX, y: ev.offsetY }
-    var delta = {
-        x: mouseCurrPos.x - gMousePrevPos.x,
-        y: mouseCurrPos.y - gMousePrevPos.y
-    }
-
-    upDatePos(delta)
-    renderImg()
-    gMousePrevPos = mouseCurrPos
-}
-
-function drop(ev) {
-    var mouseEndPos = { x: ev.offsetX, y: ev.offsetY }
-    var delta = {
-        x: mouseEndPos.x - gMousePrevPos.x,
-        y: mouseEndPos.y - gMousePrevPos.y
-    }
-    upDatePos(delta)
-    renderImg()
-    findAllPosses()
-}
-
-function toggleNavbar(elBtn) {
-    if (elBtn.classList.contains('fa-bars')) {
-        elBtn.classList.remove('fa-bars')
-        elBtn.classList.add('fa-times')
-        document.body.classList.add('burger')
-    } else {
-        elBtn.classList.remove('fa-times')
-        elBtn.classList.add('fa-bars')
-        document.body.classList.remove('burger')
-
-    }
-}
-
-function MarkText(ev) {
-    var txtPressed = getClickedTextPos(ev)
-    if (txtPressed < 0) return
-    var marked = checkMark(txtPressed)
-    if (marked) return
-    setMarked(txtPressed)
-    setCurrLine(txtPressed)
-    renderImg()
 }
 
 
@@ -116,7 +59,7 @@ function onImgSelect(img) {
     var selectedImgId = img.dataset.img;
     updateCurrImgId(selectedImgId)
     toggleDisplay('meme')
-    renderImg()
+    onRenderImg()
 }
 
 function toggleDisplay(page) {
@@ -139,69 +82,95 @@ function toggleDisplay(page) {
 
 
 // --- CONTROL PANEL ---
-function onSetLine() {
-    setCurrLine()
-    var txt = getText()
-    updateInputValue(txt)
+
+
+
+function onSetLine(line) {
+    setCurrLine(line);
+    var txt = getText();
+    onUpdateInputValue(txt);
+    updateStrokeColorValue();
+    updateFillColorValue();
+
 }
-function updateInputValue(txt) {
-    var elInput = document.querySelector('.first-input')
+function onUpdateInputValue(txt) {
+    var elInput = document.querySelector('.first-input');
     elInput.value = txt;
 }
+
 function onRemoveLine() {
     removeLine()
-    renderImg()
+    onRenderImg()
 }
 function onTextInput() {
     var firstTextBox = document.getElementById('first-text');
     var txt = firstTextBox.value;
     updateTextLine(txt);
-    renderImg()
+    onRenderImg()
 }
 function onSetFontSize(diff) {
     setFontSize(diff)
-    renderImg()
+    onRenderImg()
 }
 function onSetTextPos(diff) {
     setTextPos(diff)
-    renderImg()
+    onRenderImg()
 }
 function onAddLine() {
     createLine()
-    renderImg()
+    onRenderImg()
 }
 function onSetStrokeColor(value) {
     setStrokeColor(value)
-    renderImg()
+    onRenderImg()
+}
+function updateStrokeColorValue() {
+    var value = getStrokeColor()
+    document.querySelector('#stroke').value = value;
 }
 function onSetFillColor(value) {
     setFillColor(value)
-    renderImg()
+    onRenderImg()
+}
+function updateFillColorValue() {
+    var value = getFillColor()
+    document.querySelector('#fill').value = value;
 }
 function onSetFont(value) {
     setFont(value)
-    renderImg()
+    onRenderImg()
 }
 function onDownload(elLink) {
     const data = gCanvas.toDataURL('image/jpeg');
     elLink.href = data;
     elLink.download = 'img';
 }
+function onAlignLeft() {
+    alignLeft()
+    onRenderImg()
+}
+function onAlignCenter() {
+    alignCenter()
+    onRenderImg()
+}
+function onAlignRight() {
+    alignRight()
+    onRenderImg()
+}
 
 // --- MEME EDITOR ---
 
-function renderImg() {
+function onRenderImg() {
     var currImg = getImg();
     var img = new Image();
     img.src = currImg.url
     img.onload = () => {
         gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height)
-        renderText()
+        onRenderText()
 
     }
 }
-
-function renderText() {
+function onRenderText() {
     var linesObjs = getLineObjs();
     linesObjs.forEach((line, idx) => {
         var txt = (line.txt).toUpperCase();
@@ -214,16 +183,81 @@ function renderText() {
         gCtx.textAlign = line.align;
         gCtx.strokeText(txt, txtPos.x, txtPos.y)
         gCtx.fillText(txt, txtPos.x, txtPos.y)
-        if (line.isMarked) markBox(idx)
+        if (line.isMarked) drawMark(idx)
+        // findAllPosses()
 
     }
     )
 }
-function markBox(idx) {
+function drawMark(idx) {
     var allPosses = getAllPosses()
     var currPos = allPosses[idx];
     gCtx.beginPath();
     gCtx.rect(currPos.x - 10, currPos.y - currPos.height - 10, currPos.width + 20, currPos.height + 30);
     gCtx.fillStyle = '#0077aa2e';
     gCtx.fill()
+}
+function OnPressText(ev) {
+    var txtPressed = getClickedTextPos(ev)
+    if (txtPressed < 0) {
+        clearMarked()
+        onRenderImg()   
+        return
+    }
+    var marked = checkMark(txtPressed)
+    if (marked) return
+    setMarked(txtPressed)
+    onSetLine(txtPressed)
+    // setCurrLine(txtPressed)
+    onRenderImg()
+}
+
+// DRAG & DROP
+
+
+function dragAndDrop(ev) {
+    setIsDragging(ev)
+    gMouseStartPos = { x: ev.offsetX, y: ev.offsetY }
+    gMousePrevPos = { x: ev.offsetX, y: ev.offsetY };
+    gCanvas.addEventListener('mousemove', function (ev) {
+        ev.preventDefault()
+        ev.stopPropagation()
+        whileDrag(ev)
+    })
+}
+function whileDrag(ev) {
+    var isDragged = getIsDragging()
+    if (isDragged < 0) return
+    if (!gMousePrevPos) gMousePrevPos = gMouseStartPos
+    var mouseCurrPos = { x: ev.offsetX, y: ev.offsetY }
+    var delta = {
+        x: mouseCurrPos.x - gMousePrevPos.x,
+        y: mouseCurrPos.y - gMousePrevPos.y
+    }
+
+    upDatePos(delta)
+    gMousePrevPos = mouseCurrPos
+    onRenderImg()
+}
+function drop(ev) {
+    var mouseEndPos = { x: ev.offsetX, y: ev.offsetY }
+    var delta = {
+        x: mouseEndPos.x - gMousePrevPos.x,
+        y: mouseEndPos.y - gMousePrevPos.y
+    }
+    upDatePos(delta)
+    onRenderImg()
+
+}
+function toggleNavbar(elBtn) {
+    if (elBtn.classList.contains('fa-bars')) {
+        elBtn.classList.remove('fa-bars')
+        elBtn.classList.add('fa-times')
+        document.body.classList.add('burger')
+    } else {
+        elBtn.classList.remove('fa-times')
+        elBtn.classList.add('fa-bars')
+        document.body.classList.remove('burger')
+
+    }
 }

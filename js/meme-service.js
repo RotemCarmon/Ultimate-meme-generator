@@ -108,8 +108,8 @@ var gMeme = {
             txt: 'ENTER TEXT HERE',
             size: 35,
             align: 'left',
-            color: 'Black',
-            fillColor: 'white',
+            color: '#000000',
+            fillColor: '#ffffff',
             font: 'Impact',
             pos: { x: 100, y: 80 },
             isMarked: false,
@@ -118,8 +118,8 @@ var gMeme = {
             txt: 'ENTER TEXT HERE',
             size: 45,
             align: 'left',
-            color: 'Black',
-            fillColor: 'white',
+            color: '#000000',
+            fillColor: '#ffffff',
             font: 'Impact',
             pos: { x: 100, y: 400 },
             isMarked: false,
@@ -158,7 +158,6 @@ function createLine() {
         font: getFont(),
         pos: { x: 100, y: setY },
         isMarked: false,
-
     }
     gMeme.lines.push(newLine)
     gMeme.selectedLineidx = gMeme.lines.length - 1;
@@ -188,6 +187,25 @@ function getFillColor() {
 function getFont() {
     return gMeme.lines[gMeme.selectedLineidx].font;
 }
+function alignLeft(){
+    gMeme.lines[gMeme.selectedLineidx].pos.x = 0
+}
+function alignCenter(){
+    var size = getFontSize()
+    var font = getFont()
+    var fullFont = `${size}px  ${font}`;
+    var text = getText()
+    var textWidth = getTextWidth(text, fullFont)
+    gMeme.lines[gMeme.selectedLineidx].pos.x = (500 - textWidth) / 2 
+}
+function alignRight(){
+    var size = getFontSize()
+    var font = getFont()
+    var fullFont = `${size}px  ${font}`;
+    var text = getText()
+    var textWidth = getTextWidth(text, fullFont)
+    gMeme.lines[gMeme.selectedLineidx].pos.x = (500 - textWidth)
+}
 
 // --- IMAGE GALLERY ---
 
@@ -203,7 +221,6 @@ function getImageGallery() {
 function getImg() {
     return gImgs[gMeme.selectedImgId];
 }
-
 function setIsDragging(ev) {
     var clickedText = getClickedTextPos(ev)
     if (clickedText < 0) return
@@ -212,16 +229,12 @@ function setIsDragging(ev) {
 function getIsDragging() {
     return gAllPosses.findIndex(pos => pos.isDragging === true)
 }
-
-
 function upDatePos(delta){
     var currDragging = getIsDragging()
+    if(currDragging< 0)return
     var prevPos = gMeme.lines[currDragging].pos
-    console.log('delta',delta);
-    console.log('prevPos',prevPos);
     var newPos = {x: prevPos.x + delta.x, y:prevPos.y + delta.y}
     gMeme.lines[currDragging].pos = newPos;
-    console.log('new', newPos)
 }
 // --- SEARCH ---
 
@@ -250,7 +263,6 @@ function setCurrLine(line) {
 function getCurrLine() {
     return gMeme.selectedLineidx;
 }
-
 function getTextWidth(text, font) {
 
     var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
@@ -259,7 +271,6 @@ function getTextWidth(text, font) {
     var metrics = context.measureText(text);
     return metrics.width;
 }
-
 function findAllPosses() {
     var allPosses = gMeme.lines.map(line => {
         var txtPos = line.pos;
@@ -270,16 +281,12 @@ function findAllPosses() {
         return createPosObj(txtPos.x, txtPos.y, textWidth, textHeight)
 
     })
-    // console.log(allPosses)
     gAllPosses = allPosses;
     return allPosses
 }
-
-
 function getAllPosses() {
     return gAllPosses
 }
-
 function createPosObj(x, y, width, height) {
     return {
         x,
@@ -289,17 +296,17 @@ function createPosObj(x, y, width, height) {
         isDragging: false
     }
 }
-
 function setMarked(mark) {
-    gMeme.lines.forEach(line => line.isMarked = false)
+    clearMarked()
     gMeme.lines[mark].isMarked = true;
     gMarked = mark;
 }
-
+function clearMarked(){
+    gMeme.lines.forEach(line => line.isMarked = false)
+}
 function checkMark(txtPressed) {
     return gMeme.lines[txtPressed].isMarked;
 }
-
 function getClickedTextPos(ev) {
     var allPosses = gAllPosses;
     var ex = ev.offsetX;
