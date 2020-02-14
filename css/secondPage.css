@@ -1,0 +1,13 @@
+.img-gallery-container {
+    min-height: 300px;
+    display: grid;
+    grid-template-rows: ;
+    grid-template-columns: repeat(auto-fill , 250px) ;
+    gap: 15px;
+    padding: 10px;
+}
+
+.saved-meme {
+    height: 250px;
+    width: 250px;
+}

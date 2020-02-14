@@ -12,6 +12,7 @@ var gMousePrevPos;
 function onInit() {
     gCanvas = document.getElementById('meme-canvas');
     gCtx = gCanvas.getContext('2d');
+    saveInitState()
     addEventListeners()
     showImages()
     findAllPosses()
@@ -24,31 +25,32 @@ function addEventListeners() {
         onTextInput()
     });
     gCanvas.addEventListener('click', (ev) => {
+        ev.preventDefault()
         OnPressText(ev);
     })
     gCanvas.addEventListener('mousedown', (ev) => {
         ev.preventDefault()
-        ev.stopPropagation()
+        // ev.stopPropagation()
         dragAndDrop(ev)
     })  
     gCanvas.addEventListener('mouseup', (ev) => {
         ev.preventDefault()
-        ev.stopPropagation()
+        // ev.stopPropagation()
         findAllPosses()
         drop(ev)
     })
-    gCanvas.addEventListener('touchstart', (ev) => {
-        ev.preventDefault()
-        ev.stopPropagation()
-        dragAndDrop(ev)
-        OnPressText(ev);
-    }, false);
-    gCanvas.addEventListener('touchend', (ev) => {
-        ev.preventDefault()
-        ev.stopPropagation()
-        findAllPosses()
-        drop(ev)
-    }, false)
+    // gCanvas.addEventListener('touchstart', (ev) => {
+    //     ev.preventDefault()
+    //     ev.stopPropagation()
+    //     dragAndDrop(ev)
+    //     OnPressText(ev);
+    // }, false);
+    // gCanvas.addEventListener('touchend', (ev) => {
+    //     ev.preventDefault()
+    //     ev.stopPropagation()
+    //     findAllPosses()
+    //     drop(ev)
+    // }, false)
     // gCanvas.addEventListener('touchmove',(ev) => {
     //     ev.preventDefault()
     // }, false);
@@ -72,9 +74,11 @@ function showImages() {
 
 function onImgSelect(img) {
     var selectedImgId = img.dataset.img;
+    setInitState()
     updateCurrImgId(selectedImgId)
     toggleDisplay('meme')
     onRenderImg()
+
 }
 
 function toggleDisplay(page) {
@@ -131,6 +135,18 @@ function onSetTextPos(diff) {
     setTextPos(diff)
     onRenderImg()
 }
+function onAlignLeft() {
+    alignLeft()
+    onRenderImg()
+}
+function onAlignCenter() {
+    alignCenter()
+    onRenderImg()
+}
+function onAlignRight() {
+    alignRight()
+    onRenderImg()
+}
 function onAddLine() {
     createLine()
     onRenderImg()
@@ -160,22 +176,22 @@ function onDownload(elLink) {
     elLink.href = data;
     elLink.download = 'img';
 }
-function onAlignLeft() {
-    alignLeft()
-    onRenderImg()
+
+
+function onSaveImg(){
+    if(!localStorage.getItem('my-canvas')) savedImgs = [];
+    else var savedImgs = JSON.parse(localStorage.getItem('my-canvas'))
+
+    savedImgs.push(gCanvas.toDataURL())
+    var str = JSON.stringify(savedImgs)
+    localStorage.setItem('my-canvas',str )
+    console.log(savedImgs)
 }
-function onAlignCenter() {
-    alignCenter()
-    onRenderImg()
-}
-function onAlignRight() {
-    alignRight()
-    onRenderImg()
-}
+
 
 // --- MEME EDITOR ---
 
-function onRenderImg() {
+function onRenderImg() {    
     var currImg = getImg();
     var img = new Image();
     img.src = currImg.url
@@ -241,11 +257,11 @@ function dragAndDrop(ev) {
         ev.stopPropagation()
         whileDrag(ev)
     })
-    gCanvas.addEventListener('touchmove', function (ev) {
-        ev.preventDefault()
-        ev.stopPropagation()
-        whileDrag(ev)
-    })
+//     gCanvas.addEventListener('touchmove', function (ev) {
+//         ev.preventDefault()
+//         ev.stopPropagation()
+//         whileDrag(ev)
+//     })
 }
 function whileDrag(ev) {
     var isDragged = getIsDragging()

@@ -37,10 +37,6 @@
             background-color: #fcf8e8;
         }
 
-        .second-page {
-            height: 300px;
-        }
-
         /* Header */
 
         header {
@@ -266,6 +262,9 @@
         .flex.space-around {
             justify-content: space-around;
         }
+        .flex.wrap{
+            flex-wrap: wrap;
+        }
 
         .clean-list {
             list-style-type: none;
@@ -280,6 +279,7 @@
             justify-self: center;
             align-self: center;
         }
+        
 
         /* MEDIA QUERIES */
 
@@ -469,4 +469,4 @@
                 grid-template-columns: repeat(2, 150px);
                 gap: 5px;
             } */
-        
+      

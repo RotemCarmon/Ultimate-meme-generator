@@ -4,6 +4,7 @@
 // --- GLOBALS ---
 var gMarked;
 var gAllPosses;
+var gInitState;
 
 var gImgs = [
     {
@@ -318,4 +319,11 @@ function getClickedTextPos(ev) {
             && ey < +pos.y
     })
     return txtPressed
+}
+
+function saveInitState(){
+    gInitState = JSON.parse(JSON.stringify(gMeme));
+}
+function  setInitState(){
+    gMeme = JSON.parse(JSON.stringify(gInitState));
 }

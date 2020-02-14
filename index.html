@@ -48,7 +48,7 @@
                         <div class="colors">
                             <label for="stroke" class="center-center">Line</label>
                             <label for="fill"   class="center-center">Fill</label>
-                            <input class="round button" type="color" title="Stroke" name="stroke" id="stroke" onchange="onSetStrokeColor(this.value)">
+                            <input class="round button" type="color" title="Stroke" name="stroke" id="stroke" value="#000000" onchange="onSetStrokeColor(this.value)">
                             <input class="round button" type="color" title="Fill" name="fill" id="fill" value="#ffffff" onchange="onSetFillColor(this.value)">
                         </div>
 
@@ -64,7 +64,7 @@
                     </div>
                     <div class="links flex space-around align-center">
                         <a href="#" onclick="onDownload(this)" download="" class="round button fa fa-download"></a>
-                        <a href="#" onclick="" download="" class="round button fa fa-save"></a>
+                        <a href="#" onclick="onSaveImg()" class="round button fa fa-save"></a>
                         <a href="#" onclick="" download="" class="round button fa fa-share-alt"></a>
                     </div>
 
