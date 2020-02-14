@@ -48,9 +48,9 @@ function addEventListeners() {
         findAllPosses()
         drop(ev)
     }, false)
-    gCanvas.addEventListener('touchmove',(ev) => {
-        ev.preventDefault()
-    }, false);
+    // gCanvas.addEventListener('touchmove',(ev) => {
+    //     ev.preventDefault()
+    // }, false);
 
 
 }
