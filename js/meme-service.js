@@ -10,92 +10,92 @@ var gImgs = [
     {
         id: 0,
         url: './img/1.jpg',
-        keywords: ['funny']
+        keywords: ['funny', 'trump']
     },
     {
         id: 1,
         url: './img/2.jpg',
-        keywords: ['cute, dogs']
+        keywords: ['cute', 'dogs']
     },
     {
         id: 2,
         url: './img/3.jpg',
-        keywords: ['cute, dog, baby']
+        keywords: ['cute', 'dogs', 'baby']
     },
     {
         id: 3,
         url: './img/4.jpg',
-        keywords: ['cute, cat']
+        keywords: ['cute', 'cat']
     },
     {
         id: 4,
         url: './img/5.jpg',
-        keywords: ['funny']
+        keywords: ['funny', 'cute', 'baby']
     },
     {
         id: 5,
         url: './img/6.jpg',
-        keywords: ['cute. dogs']
+        keywords: ['funny', 'big']
     },
     {
         id: 6,
         url: './img/7.jpg',
-        keywords: ['cute, dog, baby']
+        keywords: ['cute', 'baby']
     },
     {
         id: 7,
         url: './img/8.jpg',
-        keywords: ['cute, cat']
+        keywords: ['funny']
     },
     {
         id: 8,
         url: './img/9.jpg',
-        keywords: ['funny']
+        keywords: ['funny', 'cute', 'baby']
     },
     {
         id: 9,
         url: './img/10.jpg',
-        keywords: ['cute. dogs']
+        keywords: ['funny']
     },
     {
         id: 10,
         url: './img/11.jpg',
-        keywords: ['cute, dog, baby']
+        keywords: ['funny', 'romantic', 'gay']
     },
     {
         id: 11,
         url: './img/12.jpg',
-        keywords: ['cute, cat']
+        keywords: ['motivating', 'blaming']
     },
     {
         id: 12,
         url: './img/13.jpg',
-        keywords: ['funny']
+        keywords: ['cheers', 'greeting']
     },
     {
         id: 13,
         url: './img/14.jpg',
-        keywords: ['cute. dogs']
+        keywords: ['meaningful', 'badass', 'intense']
     },
     {
         id: 14,
         url: './img/15.jpg',
-        keywords: ['cute, dog, baby']
+        keywords: ['explaining', 'talk']
     },
     {
         id: 15,
         url: './img/16.jpg',
-        keywords: ['cute, cat']
+        keywords: ['funny', 'omg', 'embarrassed']
     },
     {
         id: 16,
         url: './img/17.jpg',
-        keywords: ['cute. dogs']
+        keywords: ['putin', 'two']
     },
     {
         id: 17,
         url: './img/18.jpg',
-        keywords: ['cute, dog, baby']
+        keywords: ['toy', 'imagine', 'scared']
     },
 
 ]
@@ -132,20 +132,54 @@ var gMeme = {
 
 // --- CONTROL PANEL ---
 
-function updateTextLine(txt) {
+function setText(txt) {
     gMeme.lines[gMeme.selectedLineidx].txt = txt
 }
 function setFontSize(diff) {
     gMeme.lines[gMeme.selectedLineidx].size += diff
 }
-function setTextPos(diff) {
-    gMeme.lines[gMeme.selectedLineidx].pos.y += diff
+function setStrokeColor(value) {
+    gMeme.lines[gMeme.selectedLineidx].color = value;
+}
+function setFillColor(value) {
+    gMeme.lines[gMeme.selectedLineidx].fillColor = value;
+}
+function setFont(value) {
+    gMeme.lines[gMeme.selectedLineidx].font = value;
+}
+function getText() {
+    return gMeme.lines[gMeme.selectedLineidx].txt.toUpperCase();
 }
 function getFontSize() {
     return gMeme.lines[gMeme.selectedLineidx].size;
 }
-function getTextPos() {
-    return gMeme.lines[gMeme.selectedLineidx].pos
+function getStrokeColor() {
+    return gMeme.lines[gMeme.selectedLineidx].color;
+}
+function getFillColor() {
+    return gMeme.lines[gMeme.selectedLineidx].fillColor;
+}
+function getFont() {
+    return gMeme.lines[gMeme.selectedLineidx].font;
+}
+function alignLeft() {
+    gMeme.lines[gMeme.selectedLineidx].pos.x = 0
+}
+function alignCenter() {
+    var size = getFontSize()
+    var font = getFont()
+    var fullFont = `${size}px  ${font}`;
+    var text = getText()
+    var textWidth = getTextWidth(text, fullFont)
+    gMeme.lines[gMeme.selectedLineidx].pos.x = (500 - textWidth) / 2
+}
+function alignRight() {
+    var size = getFontSize()
+    var font = getFont()
+    var fullFont = `${size}px  ${font}`;
+    var text = getText()
+    var textWidth = getTextWidth(text, fullFont)
+    gMeme.lines[gMeme.selectedLineidx].pos.x = (500 - textWidth)
 }
 function createLine() {
     var numOfLines = gMeme.lines.length;
@@ -167,45 +201,8 @@ function removeLine() {
     var line = gMeme.selectedLineidx;
     gMeme.lines.splice(line, 1)
 }
-function getText() {
-    return gMeme.lines[gMeme.selectedLineidx].txt.toUpperCase();
-}
-function setStrokeColor(value) {
-    gMeme.lines[gMeme.selectedLineidx].color = value;
-}
-function setFillColor(value) {
-    gMeme.lines[gMeme.selectedLineidx].fillColor = value;
-}
-function setFont(value) {
-    gMeme.lines[gMeme.selectedLineidx].font = value;
-}
-function getStrokeColor() {
-    return gMeme.lines[gMeme.selectedLineidx].color;
-}
-function getFillColor() {
-    return gMeme.lines[gMeme.selectedLineidx].fillColor;
-}
-function getFont() {
-    return gMeme.lines[gMeme.selectedLineidx].font;
-}
-function alignLeft(){
-    gMeme.lines[gMeme.selectedLineidx].pos.x = 0
-}
-function alignCenter(){
-    var size = getFontSize()
-    var font = getFont()
-    var fullFont = `${size}px  ${font}`;
-    var text = getText()
-    var textWidth = getTextWidth(text, fullFont)
-    gMeme.lines[gMeme.selectedLineidx].pos.x = (500 - textWidth) / 2 
-}
-function alignRight(){
-    var size = getFontSize()
-    var font = getFont()
-    var fullFont = `${size}px  ${font}`;
-    var text = getText()
-    var textWidth = getTextWidth(text, fullFont)
-    gMeme.lines[gMeme.selectedLineidx].pos.x = (500 - textWidth)
+function getTextPos() {
+    return gMeme.lines[gMeme.selectedLineidx].pos
 }
 
 // --- IMAGE GALLERY ---
@@ -230,31 +227,23 @@ function setIsDragging(ev) {
 function getIsDragging() {
     return gAllPosses.findIndex(pos => pos.isDragging === true)
 }
-function upDatePos(delta){
+function upDatePos(delta) {
     var currDragging = getIsDragging()
-    if(currDragging< 0)return
+    if (currDragging < 0) return
     var prevPos = gMeme.lines[currDragging].pos
-    var newPos = {x: prevPos.x + delta.x, y:prevPos.y + delta.y}
+    var newPos = { x: prevPos.x + delta.x, y: prevPos.y + delta.y }
     gMeme.lines[currDragging].pos = newPos;
 }
 // --- SEARCH ---
 
-function searchKeyWords(value){
-
-    console.log('value->',value);
-  var filteredImgs =  gImgs.filter((img, idx) => {
-
-
-        if(img.keywords.some(key => key === value)){
-            return idx
-
-        // console.log(img.keywords[0] === value)
-        // if(img.keywords[0] === value )console.log('YEYY!')
-        
-        } 
-
-    } )
-    console.log('filteredImgs', filteredImgs)
+function searchKeyWords(value) {
+    var filteredImgs = gImgs.filter((img) => {
+        if(!value) return true
+        else{
+            return img.keywords.some(key => key.toLowerCase().indexOf(value.toLowerCase()) !== -1)
+        }
+    })
+    return filteredImgs;
 }
 
 
@@ -293,7 +282,7 @@ function getTextWidth(text, font) {
     var metrics = context.measureText(text);
     return metrics.width;
 }
-function findAllPosses() {
+function setAllPosses() {
     var allPosses = gMeme.lines.map(line => {
         var txtPos = line.pos;
         var textHeight = line.size;
@@ -323,7 +312,7 @@ function setMarked(mark) {
     gMeme.lines[mark].isMarked = true;
     gMarked = mark;
 }
-function clearMarked(){
+function clearMarked() {
     gMeme.lines.forEach(line => line.isMarked = false)
 }
 function checkMark(txtPressed) {
@@ -342,9 +331,17 @@ function getClickedTextPos(ev) {
     return txtPressed
 }
 
-function saveInitState(){
+function saveInitState() {
     gInitState = JSON.parse(JSON.stringify(gMeme));
 }
-function  setInitState(){
+function setInitState() {
     gMeme = JSON.parse(JSON.stringify(gInitState));
+}
+function saveImg(){
+    if (!localStorage.getItem('my-canvas')) savedImgs = [];
+    else var savedImgs = JSON.parse(localStorage.getItem('my-canvas'))
+
+    savedImgs.push(gCanvas.toDataURL())
+    var str = JSON.stringify(savedImgs)
+    localStorage.setItem('my-canvas', str)
 }

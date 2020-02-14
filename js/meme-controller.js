@@ -13,8 +13,8 @@ function onInit() {
     gCtx = gCanvas.getContext('2d');
     saveInitState()
     addEventListeners()
-    showImages()
-    findAllPosses()
+    onRenderImgs()
+    setAllPosses()
 }
 function addEventListeners() {
     var firstText = document.querySelector('.first-input');
@@ -35,7 +35,7 @@ function addEventListeners() {
     gCanvas.addEventListener('mouseup', (ev) => {
         ev.preventDefault()
         // ev.stopPropagation()
-        findAllPosses()
+        setAllPosses()
         drop(ev)
     })
     // gCanvas.addEventListener('touchstart', (ev) => {
@@ -47,7 +47,7 @@ function addEventListeners() {
     // gCanvas.addEventListener('touchend', (ev) => {
     //     ev.preventDefault()
     //     ev.stopPropagation()
-    //     findAllPosses()
+    //     setAllPosses()
     //     drop(ev)
     // }, false)
     // gCanvas.addEventListener('touchmove',(ev) => {
@@ -60,22 +60,13 @@ function addEventListeners() {
 
 // --- IMAGE GALLERY --- 
 
-function showImages() {
-    var imgGallery = getImageGallery()
-    var strHTMLs =
-        imgGallery.map(img => {
-            return `<img src="${img.url}" alt="" data-img="${img.id}" class="image pointer" onclick="onImgSelect(this)">`
-        }).join('');
-    var elGallery = document.querySelector('.img-gallery');
-    elGallery.innerHTML = strHTMLs;
-
-}
+// }
 function onImgSelect(img) {
     var selectedImgId = img.dataset.img;
     setInitState()
     updateCurrImgId(selectedImgId)
-
     displayMemeEditor()
+    updateProperties()
     onRenderImg()
 
 }
@@ -85,7 +76,7 @@ function displayMemeEditor() {
     elGallery.style.display = 'none'
     elMeme.style.display = 'flex'
 }
-function displayGallery(){
+function displayGallery() {
     var elMeme = document.querySelector('.meme-container')
     var elGallery = document.querySelector('.img-gallery')
     elGallery.style.display = 'grid'
@@ -95,32 +86,37 @@ function displayGallery(){
 
 // --- SEARCH ---
 
-function onSearchKeyWords(value){
-    searchKeyWords(value)
-
+function onSearchKeyWords(value) {
+    var filteredImgs = searchKeyWords(value)
+    return filteredImgs
 }
-
-
-// TODO - when a nav button is pressed it can't be repressed
-
+function onRenderImgs(value) {
+    var imgGallery = onSearchKeyWords(value)
+    var strHTMLs =
+        imgGallery.map(img => {
+            return `<img src="${img.url}" alt="" data-img="${img.id}" class="image pointer" onclick="onImgSelect(this)">`
+        }).join('');
+    var elGallery = document.querySelector('.img-gallery');
+    elGallery.innerHTML = strHTMLs;
+}
 
 // --- CONTROL PANEL ---
 
-
-
-function onSetLine(line) {
+function onChooseLine(line) {
     setCurrLine(line);
+    updateProperties()
+}
+function updateProperties() {
     var txt = getText();
     onUpdateInputValue(txt);
     updateStrokeColorValue();
     updateFillColorValue();
-
+    updateFont();
 }
 function onUpdateInputValue(txt) {
     var elInput = document.querySelector('.first-input');
     elInput.value = txt;
 }
-
 function onRemoveLine() {
     removeLine()
     onRenderImg()
@@ -128,15 +124,11 @@ function onRemoveLine() {
 function onTextInput() {
     var firstTextBox = document.getElementById('first-text');
     var txt = firstTextBox.value;
-    updateTextLine(txt);
+    setText(txt);
     onRenderImg()
 }
 function onSetFontSize(diff) {
     setFontSize(diff)
-    onRenderImg()
-}
-function onSetTextPos(diff) {
-    setTextPos(diff)
     onRenderImg()
 }
 function onAlignLeft() {
@@ -175,20 +167,19 @@ function onSetFont(value) {
     setFont(value)
     onRenderImg()
 }
+function updateFont() {
+    var value = getFont();
+    document.querySelector('.font-list').value = value;
+}
 function onDownload(elLink) {
     const data = gCanvas.toDataURL('image/jpeg');
     elLink.href = data;
     elLink.download = 'img';
 }
-
-
 function onSaveImg() {
-    if (!localStorage.getItem('my-canvas')) savedImgs = [];
-    else var savedImgs = JSON.parse(localStorage.getItem('my-canvas'))
-
-    savedImgs.push(gCanvas.toDataURL())
-    var str = JSON.stringify(savedImgs)
-    localStorage.setItem('my-canvas', str)
+    clearMarked()
+    onRenderImg()
+    saveImg()
 }
 
 
@@ -201,7 +192,6 @@ function onRenderImg() {
     img.onload = () => {
         gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height)
         onRenderText()
-
     }
 }
 function onRenderText() {
@@ -240,7 +230,7 @@ function OnPressText(ev) {
     var marked = checkMark(txtPressed)
     if (marked) return
     setMarked(txtPressed)
-    onSetLine(txtPressed)
+    onChooseLine(txtPressed)
     onRenderImg()
 }
 
