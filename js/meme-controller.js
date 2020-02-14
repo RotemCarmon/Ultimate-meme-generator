@@ -24,23 +24,23 @@ function addEventListeners() {
         onTextInput()
     });
     gCanvas.addEventListener('click', (ev) => {
-        OnPressText(ev);
     })
-    // gCanvas.addEventListener('mousedown', (ev) => {
-    //     ev.preventDefault()
-    //     ev.stopPropagation()
-    //     dragAndDrop(ev)
-    // })
-    // gCanvas.addEventListener('mouseup', (ev) => {
-    //     ev.preventDefault()
-    //     ev.stopPropagation()
-    //     findAllPosses()
-    //     drop(ev)
-    // })
-    gCanvas.addEventListener('touchstart',(ev)=> {
+    gCanvas.addEventListener('mousedown', (ev) => {
         ev.preventDefault()
         ev.stopPropagation()
         dragAndDrop(ev)
+    })
+    gCanvas.addEventListener('mouseup', (ev) => {
+        ev.preventDefault()
+        ev.stopPropagation()
+        findAllPosses()
+        drop(ev)
+    })
+    gCanvas.addEventListener('touchstart', (ev) => {
+        ev.preventDefault()
+        ev.stopPropagation()
+        dragAndDrop(ev)
+        OnPressText(ev);
     }, false);
     gCanvas.addEventListener('touchend', (ev) => {
         ev.preventDefault()
@@ -215,7 +215,7 @@ function OnPressText(ev) {
     var txtPressed = getClickedTextPos(ev)
     if (txtPressed < 0) {
         clearMarked()
-        onRenderImg()   
+        onRenderImg()
         return
     }
     var marked = checkMark(txtPressed)
@@ -233,8 +233,8 @@ function dragAndDrop(ev) {
     setIsDragging(ev)
     gMouseStartPos = { x: ev.offsetX, y: ev.offsetY }
     gMousePrevPos = { x: ev.offsetX, y: ev.offsetY };
-   
-   
+
+
     // gCanvas.addEventListener('mousemove', function (ev) {
     //     ev.preventDefault()
     //     ev.stopPropagation()
