@@ -5,7 +5,6 @@
 
 var gCanvas;
 var gCtx
-var gCurrPage;
 var gMouseStartPos;
 var gMousePrevPos;
 
@@ -32,7 +31,7 @@ function addEventListeners() {
         ev.preventDefault()
         // ev.stopPropagation()
         dragAndDrop(ev)
-    })  
+    })
     gCanvas.addEventListener('mouseup', (ev) => {
         ev.preventDefault()
         // ev.stopPropagation()
@@ -71,29 +70,34 @@ function showImages() {
     elGallery.innerHTML = strHTMLs;
 
 }
-
 function onImgSelect(img) {
     var selectedImgId = img.dataset.img;
     setInitState()
     updateCurrImgId(selectedImgId)
-    toggleDisplay('meme')
+
+    displayMemeEditor()
     onRenderImg()
 
 }
-
-function toggleDisplay(page) {
-    if (gCurrPage === page) return
+function displayMemeEditor() {
     var elMeme = document.querySelector('.meme-container')
     var elGallery = document.querySelector('.img-gallery')
-    if (elMeme.style.display !== 'flex') {
-        gCurrPage = 'meme'
-        elGallery.style.display = 'none'
-        elMeme.style.display = 'flex'
-    } else {
-        gCurrPage = 'gallery'
-        elGallery.style.display = 'grid'
-        elMeme.style.display = 'none'
-    }
+    elGallery.style.display = 'none'
+    elMeme.style.display = 'flex'
+}
+function displayGallery(){
+    var elMeme = document.querySelector('.meme-container')
+    var elGallery = document.querySelector('.img-gallery')
+    elGallery.style.display = 'grid'
+    elMeme.style.display = 'none'
+}
+
+
+// --- SEARCH ---
+
+function onSearchKeyWords(value){
+    searchKeyWords(value)
+
 }
 
 
@@ -178,20 +182,19 @@ function onDownload(elLink) {
 }
 
 
-function onSaveImg(){
-    if(!localStorage.getItem('my-canvas')) savedImgs = [];
+function onSaveImg() {
+    if (!localStorage.getItem('my-canvas')) savedImgs = [];
     else var savedImgs = JSON.parse(localStorage.getItem('my-canvas'))
 
     savedImgs.push(gCanvas.toDataURL())
     var str = JSON.stringify(savedImgs)
-    localStorage.setItem('my-canvas',str )
-    console.log(savedImgs)
+    localStorage.setItem('my-canvas', str)
 }
 
 
 // --- MEME EDITOR ---
 
-function onRenderImg() {    
+function onRenderImg() {
     var currImg = getImg();
     var img = new Image();
     img.src = currImg.url
@@ -215,7 +218,6 @@ function onRenderText() {
         gCtx.strokeText(txt, txtPos.x, txtPos.y)
         gCtx.fillText(txt, txtPos.x, txtPos.y)
         if (line.isMarked) drawMark(idx)
-        // findAllPosses()
 
     }
     )
@@ -239,7 +241,6 @@ function OnPressText(ev) {
     if (marked) return
     setMarked(txtPressed)
     onSetLine(txtPressed)
-    // setCurrLine(txtPressed)
     onRenderImg()
 }
 
@@ -257,11 +258,11 @@ function dragAndDrop(ev) {
         ev.stopPropagation()
         whileDrag(ev)
     })
-//     gCanvas.addEventListener('touchmove', function (ev) {
-//         ev.preventDefault()
-//         ev.stopPropagation()
-//         whileDrag(ev)
-//     })
+    //     gCanvas.addEventListener('touchmove', function (ev) {
+    //         ev.preventDefault()
+    //         ev.stopPropagation()
+    //         whileDrag(ev)
+    //     })
 }
 function whileDrag(ev) {
     var isDragged = getIsDragging()

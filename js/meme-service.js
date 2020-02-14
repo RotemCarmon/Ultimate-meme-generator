@@ -15,7 +15,7 @@ var gImgs = [
     {
         id: 1,
         url: './img/2.jpg',
-        keywords: ['cute. dogs']
+        keywords: ['cute, dogs']
     },
     {
         id: 2,
@@ -239,10 +239,31 @@ function upDatePos(delta){
 }
 // --- SEARCH ---
 
+function searchKeyWords(value){
+
+    console.log('value->',value);
+  var filteredImgs =  gImgs.filter((img, idx) => {
+
+
+        if(img.keywords.some(key => key === value)){
+            return idx
+
+        // console.log(img.keywords[0] === value)
+        // if(img.keywords[0] === value )console.log('YEYY!')
+        
+        } 
+
+    } )
+    console.log('filteredImgs', filteredImgs)
+}
+
+
 // TODO - Array of keywords objects contains keyword and num of times it've been search
 
 
 // --- Utils ---
+
+
 
 
 function getLineObjs() {

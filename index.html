@@ -17,7 +17,7 @@
         <div class="fa fa-bars border menu-btn" onclick="toggleNavbar(this)"></div>
         <nav class="navbar-container ">
             <ul class="nav-bar clean-list flex">
-                <li><a href="#" onclick="toggleDisplay('gallery')">GALLERY</a></li>
+                <li><a href="#" onclick="displayGallery()">GALLERY</a></li>
                 <li><a href="memes.html">MEME</a></li>
                 <li><a href="#">ABOUT</a></li>
 
@@ -76,6 +76,12 @@
 
 
         <div class="img-gallery-container">
+            <div class="search-container">
+                <div class="sreach-field">
+                    <input type="text" name="search" id="search" placeholder="WHAT ARE YOU LOOKING FOR?">
+                </div>
+                <div class="most-searched"></div>
+            </div>
             <div class="img-gallery"></div>
         </div>
 
