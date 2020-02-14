@@ -26,17 +26,31 @@ function addEventListeners() {
     gCanvas.addEventListener('click', (ev) => {
         OnPressText(ev);
     })
-    gCanvas.addEventListener('mousedown', (ev) => {
+    // gCanvas.addEventListener('mousedown', (ev) => {
+    //     ev.preventDefault()
+    //     ev.stopPropagation()
+    //     dragAndDrop(ev)
+    // })
+    // gCanvas.addEventListener('mouseup', (ev) => {
+    //     ev.preventDefault()
+    //     ev.stopPropagation()
+    //     findAllPosses()
+    //     drop(ev)
+    // })
+    gCanvas.addEventListener('touchstart',(ev)=> {
         ev.preventDefault()
         ev.stopPropagation()
         dragAndDrop(ev)
-    })
-    gCanvas.addEventListener('mouseup', (ev) => {
+    }, false);
+    gCanvas.addEventListener('touchend', (ev) => {
         ev.preventDefault()
         ev.stopPropagation()
         findAllPosses()
         drop(ev)
-    })
+    }, false)
+    gCanvas.addEventListener('touchmove',(ev) => {
+        ev.preventDefault()
+    }, false);
 
 
 }
@@ -219,7 +233,14 @@ function dragAndDrop(ev) {
     setIsDragging(ev)
     gMouseStartPos = { x: ev.offsetX, y: ev.offsetY }
     gMousePrevPos = { x: ev.offsetX, y: ev.offsetY };
-    gCanvas.addEventListener('mousemove', function (ev) {
+   
+   
+    // gCanvas.addEventListener('mousemove', function (ev) {
+    //     ev.preventDefault()
+    //     ev.stopPropagation()
+    //     whileDrag(ev)
+    // })
+    gCanvas.addEventListener('touchmove', function (ev) {
         ev.preventDefault()
         ev.stopPropagation()
         whileDrag(ev)
