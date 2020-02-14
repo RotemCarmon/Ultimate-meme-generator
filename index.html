@@ -18,7 +18,7 @@
         <nav class="navbar-container ">
             <ul class="nav-bar clean-list flex">
                 <li><a href="#" onclick="toggleDisplay('gallery')">GALLERY</a></li>
-                <li><a href="memes.html" >MEME</a></li>
+                <li><a href="memes.html">MEME</a></li>
                 <li><a href="#">ABOUT</a></li>
 
             </ul>
@@ -31,29 +31,41 @@
                 <canvas id="meme-canvas" width="500" height="500"></canvas>
             </div>
 
-            <div class="control-panel grid">
-                <input type="text" name="first-text" class="first-input" id="first-text" placeholder="Enter Text Here">
-                <div class="buttons">
-                    <div class="round button increase fa fa-font " onclick="onSetFontSize(1)">+</div>
-                    <div class="round button decrease fa fa-font" onclick="onSetFontSize(-1)">-</div>
-                    <div class="round button  fa " onclick="onAlignLeft()">L</div>
-                    <div class="round button  fa " onclick="onAlignCenter()">C</div>
-                    <div class="round button  fa " onclick="onAlignRight()">R</div>
-                    <!-- <div class="round button up fa fa-arrow-up" onclick="onSetTextPos(-10)"></div>
-                    <div class="round button down fa fa-arrow-down" onclick="onSetTextPos(10)"></div> -->
-                    <div class="round button add-line fa fa-plus" onclick="onAddLine()"></div>
-                    <div class="round button remove-line fa fa-trash" onclick="onRemoveLine()"></div>
-                    <label for="stroke" class="center-center">Line</label><input class="round" type="color" title="Stroke" name="stroke" id="stroke"
-                        onchange="onSetStrokeColor(this.value)">
-                    <label for="fill" class="center-center">Fill</label><input class="round" type="color" title="Fill" name="fill" id="fill" value="#ffffff"
-                        onchange="onSetFillColor(this.value)">
-                    <select list="fonts" value="Impact" class="round font-list" onchange="onSetFont(this.value)">
-                        <option value="Impact">Impact </option>
-                        <option value="cursive">Cursive</option>
-                        <option value="fantasy">fantasy</option>
-                        <option value="Georgia">Georgia</option>
-                    </select>
-                    <a href="#" onclick="onDownload(this)" download="" class="round button fa fa-download"></a>
+            <div class="control-panel">
+                <div class="buttons grid">
+                    <input type="text" name="first-text" class="first-input center-center" id="first-text" placeholder="Enter Text Here">
+                    <div class="lines">
+                        <div class="round center-center button add-line fa fa-plus" onclick="onAddLine()"></div>
+                        <div class="round center-center button remove-line fa fa-trash" onclick="onRemoveLine()"></div>
+                    </div>
+                    <div class="text-buttons">
+                        <div class="round button increase center-center" onclick="onSetFontSize(1)">A+</div>
+                        <div class="round button decrease center-center" onclick="onSetFontSize(-1)">A-</div>
+                        <div class="round button center-center " onclick="onAlignLeft()">L</div>
+                        <div class="round button center-center " onclick="onAlignCenter()">C</div>
+                        <div class="round button center-center " onclick="onAlignRight()">R</div>
+                        <div class="colors">
+                            <label for="stroke" class="center-center">Line</label>
+                            <label for="fill"   class="center-center">Fill</label>
+                            <input class="round button" type="color" title="Stroke" name="stroke" id="stroke" onchange="onSetStrokeColor(this.value)">
+                            <input class="round button" type="color" title="Fill" name="fill" id="fill" value="#ffffff" onchange="onSetFillColor(this.value)">
+                        </div>
+
+                        <select list="fonts" value="Impact" class="round font-list" onchange="onSetFont(this.value)">
+                            <option value="Impact">Impact </option>
+                            <option value="cursive">Cursive</option>
+                            <option value="fantasy">fantasy</option>
+                            <option value="Georgia">Georgia</option>
+                        </select>
+                    </div>
+                    <div class="stikers">
+
+                    </div>
+                    <div class="links flex space-around align-center">
+                        <a href="#" onclick="onDownload(this)" download="" class="round button fa fa-download"></a>
+                        <a href="#" onclick="" download="" class="round button ">SAVE</a>
+                        <a href="#" onclick="" download="" class="round button ">SHARE</a>
+                    </div>
 
 
                 </div>
@@ -70,7 +82,7 @@
 
     </div>
     <footer class="flex justify-center align-center">
-        <h4>The Ultimate Meme Creator Made By Rotem Carmon</h4>
+        <h4>The Ultimate Meme Generator Created By Rotem Carmon</h4>
     </footer>
     <script src="js/meme-service.js"></script>
     <script src="js/meme-controller.js"></script>
