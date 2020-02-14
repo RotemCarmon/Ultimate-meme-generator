@@ -24,12 +24,13 @@ function addEventListeners() {
         onTextInput()
     });
     gCanvas.addEventListener('click', (ev) => {
+        OnPressText(ev);
     })
     gCanvas.addEventListener('mousedown', (ev) => {
         ev.preventDefault()
         ev.stopPropagation()
         dragAndDrop(ev)
-    })
+    })  
     gCanvas.addEventListener('mouseup', (ev) => {
         ev.preventDefault()
         ev.stopPropagation()
@@ -235,11 +236,11 @@ function dragAndDrop(ev) {
     gMousePrevPos = { x: ev.offsetX, y: ev.offsetY };
 
 
-    // gCanvas.addEventListener('mousemove', function (ev) {
-    //     ev.preventDefault()
-    //     ev.stopPropagation()
-    //     whileDrag(ev)
-    // })
+    gCanvas.addEventListener('mousemove', function (ev) {
+        ev.preventDefault()
+        ev.stopPropagation()
+        whileDrag(ev)
+    })
     gCanvas.addEventListener('touchmove', function (ev) {
         ev.preventDefault()
         ev.stopPropagation()
