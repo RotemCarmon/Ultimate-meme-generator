@@ -38,8 +38,13 @@ function addEventListeners() {
     gCanvas.addEventListener('mouseup', (ev) => {
         ev.preventDefault()
         // ev.stopPropagation()
+        dropStiker(ev)
         setAllPosses()
         drop(ev)
+    })
+    gCanvas.addEventListener('mousemove',ev =>{
+        ev.preventDefault()
+        
     })
     // gCanvas.addEventListener('touchstart', (ev) => {
     //     ev.preventDefault()
@@ -103,15 +108,7 @@ function onRenderImgs(value) {
     var elGallery = document.querySelector('.img-gallery');
     elGallery.innerHTML = strHTMLs;
 }
-function onRenderStikers() {
-    var stikers = getStikers()
-    var strHTMLs =
-        stikers.map(stiker => {
-            return `<img src="${stiker.url}" alt="" data-stiker="${stiker.id}" class="stiker pointer" onclick="onStikerSelect(this)">`
-        }).join('');
-    var elStikers = document.querySelector('.stikers');
-    elStikers.innerHTML = strHTMLs;
-}
+
 function onSetKeywords(value){
     setKeywords(value)
     onGetKeywords()
@@ -227,13 +224,12 @@ function onRenderImg() {
     }
 }
 
-function onRenderStiker(){
+function onRenderStiker(stikerPos){
     var currStiker = getStiker()
-    var stikerPos = currStiker.pos;
     var img = new Image();
     img.src = currStiker.url
     img.onload = () => {
-        gCtx.drawImage(img, stikerPos.x ,stikerPos.y , 150, 150)
+        gCtx.drawImage(img, stikerPos.x ,stikerPos.y , 100, 100)
     }
 }
 
@@ -341,5 +337,25 @@ function toggleNavbar(elBtn) {
 }
 function onStikerSelect(stiker){
     updateCurrStikerId(stiker)
-    onRenderStiker()
+    // onRenderStiker()
 }
+function onRenderStikers() {
+    var stikers = getStikers()
+    var strHTMLs =
+        stikers.map(stiker => {
+            return `<img src="${stiker.url}" alt="" data-stiker="${stiker.id}" class="stiker pointer" onmousedown="onStikerSelect(this)" draggable="true">`
+        }).join('');
+    var elStikers = document.querySelector('.stikers');
+    elStikers.innerHTML = strHTMLs;
+}
+
+function dropStiker(ev){
+    var dropPos = {x: ev.offsetX, y: ev.offsetY}
+    console.log('droped here',dropPos);
+    onRenderStiker(dropPos)
+}
+
+function allowDrop(ev) {
+    ev.preventDefault();
+  }
+  

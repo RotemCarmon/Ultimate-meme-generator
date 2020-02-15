@@ -136,37 +136,44 @@ var gStikers = {
         {
             id: 0,
             url: './stikers/mario mushroom.png',
-            pos: { x: 0, y: 0 }
+            pos: { x: 0, y: 0 },
+            isSelected: false
         },
         {
             id: 1,
             url: './stikers/a funny dog sticker.png',
-            pos: { x: 300, y: 100 }
+            pos: { x: 300, y: 100 },
+            isSelected: false
         },
         {
             id: 2,
             url: './stikers/cartoon sticker.png',
-            pos: { x: 100, y: 300 }
+            pos: { x: 100, y: 300 },
+            isSelected: false
         },
         {
             id: 3,
             url: './stikers/challenge accepted sticker.png',
-            pos: { x: 300, y: 300 }
+            pos: { x: 300, y: 300 },
+            isSelected: false
         },
         {
             id: 4,
             url: './stikers/false.png',
-            pos: { x: 300, y: 100 }
+            pos: { x: 300, y: 100 },
+            isSelected: false
         },
         {
             id: 5,
             url: './stikers/nugs not drugs.png',
-            pos: { x: 100, y: 300 }
+            pos: { x: 100, y: 300 },
+            isSelected: false
         },
         {
             id: 6,
-            url: './stikers/snoop sticker.png',
-            pos: { x: 300, y: 300 }
+            url: './stikers/present.png',
+            pos: { x: 300, y: 300 },
+            isSelected: false
         },
 
     ]
@@ -277,7 +284,7 @@ function upDatePos(delta) {
     if (currDragging < 0) return
     var prevPos = gMeme.lines[currDragging].pos
     var newPos = { x: prevPos.x + delta.x, y: prevPos.y + delta.y }
-    gMeme.lines[currDragging].pos = newPos;
+    gMeme.lines[currDragging].pos =  newPos;
 }
 function getStiker() {
     var currStiker = gStikers.selectedStikerIdx;
@@ -431,7 +438,7 @@ function getClickedStikerPos(ev) {
             && ey > +pos.y
     })
 
-    console.log('stikerPosses', stikerPosses);
+    console.log('current stikerPosses', stikerPosses);
     return stikerPressed
 }
 
@@ -457,6 +464,13 @@ function shuffleArray(array) {
     }
     return array
 }
+function getStikerId(stiker){
+    return stiker.dataset.stiker
+}
 function updateCurrStikerId(stiker) {
-    gStikers.selectedStikerIdx = stiker.dataset.stiker;
+    var stikerId = getStikerId(stiker);
+    console.log('selected stiker', stikerId)
+    gStikers.stikers.forEach(stiker => stiker.isSelected = false)
+    gStikers.stikers[stikerId].isSelected = true
+    gStikers.selectedStikerIdx = stikerId;
 }
