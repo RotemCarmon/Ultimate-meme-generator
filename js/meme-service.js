@@ -285,7 +285,7 @@ function upDatePos(delta) {
     if (currDragging < 0) return
     var prevPos = gMeme.lines[currDragging].pos
     var newPos = { x: prevPos.x + delta.x, y: prevPos.y + delta.y }
-    gMeme.lines[currDragging].pos =  newPos;
+    gMeme.lines[currDragging].pos = newPos;
 }
 
 // --- SEARCH ---
@@ -302,7 +302,6 @@ function searchKeyWords(value) {
 function setKeywords(value) {
     if (value in gKeywords) gKeywords[value] += 1
     else gKeywords[value] = 1
-    console.log('gKeywords', gKeywords);
 }
 function getfrequentKeywords() {   // get only the 5 most frequently searched words
 
@@ -405,10 +404,12 @@ function checkMark(txtPressed) {
     return gMeme.lines[txtPressed].isMarked;
 }
 function getClickedTextPos(ev) {
+    var pos = touchHandler(ev)
+
     var allPosses = gAllPosses;
-    
-    var ex = ev.offsetX;
-    var ey = ev.offsetY;
+
+    var ex = pos.x;
+    var ey = pos.y;
     var txtPressed = allPosses.findIndex(pos => {
         return ex > +pos.x
             && ex < +(pos.x + pos.width)
@@ -448,7 +449,7 @@ function shuffleArray(array) {
 
 // --- STIKERS ---
 
-function getStikerId(stiker){  // Gets the id from the element's dataset
+function getStikerId(stiker) {  // Gets the id from the element's dataset
     return stiker.dataset.stiker
 }
 function updateCurrStiker(stiker) { // Update isSelected on stiker property to true
@@ -456,40 +457,41 @@ function updateCurrStiker(stiker) { // Update isSelected on stiker property to t
     updateIsSelected(stikerId)
     updateSelectedStikerIdx(stikerId)
 }
-function updateSelectedStikerIdx(idx){
+function updateSelectedStikerIdx(idx) {
     gStikers.selectedStikerIdx = idx;
 }
-function updateIsSelected(stikerId){
+function updateIsSelected(stikerId) {
     clearIsSelected()
     gStikers.stikers[stikerId].isSelected = true
 }
-function clearIsSelected(){
+function clearIsSelected() {
     gStikers.stikers.forEach(stiker => stiker.isSelected = false)
 }
-function getSelected(){
+function getSelected() {
     var selectedStiker = gStikers.stikers.find(stiker => stiker.isSelected)
-    if(selectedStiker) return selectedStiker.id;
-    
+    if (selectedStiker) return selectedStiker.id;
+
 }
-function updateStikerOnCanvas(ev){ // add a new stiker to the stikersOnCanvas Array
+function updateStikerOnCanvas(ev) { // add a new stiker to the stikersOnCanvas Array
     var stikerPos = _createStikerPos(ev)
     gStikers.stikersOnCanvas.push(stikerPos)
 }
-function _createStikerPos(ev){ // creates a new stiker position object to be added to the stikersOnCanvas array
+function _createStikerPos(ev) { // creates a new stiker position object to be added to the stikersOnCanvas array
     var stiker = getStiker();
-
+    var pos = touchHandler(ev)
     return {
         id: stiker.id,
         url: stiker.url,
-        pos: {x:ev.offsetX, y:ev.offsetY},
+        pos: { x: pos.x, y: pos.y },
         isSelected: false,
     }
 }
 function getClickedStikerPos(ev) {  // return the clicked stiker idx
+    var pressPos = touchHandler(ev)
     var stikerPosses = gStikers.stikersOnCanvas.map(stiker => stiker.pos) // returns an array of all stikers idx position on the canvas
 
-    var ex = ev.offsetX;
-    var ey = ev.offsetY;  // mouse pressed position
+    var ex = pressPos.x;
+    var ey = pressPos.y;  // mouse pressed position
 
     var stikerPressedIdx = stikerPosses.findIndex(pos => {
         return ex > +pos.x
@@ -507,15 +509,15 @@ function getStiker() { // returns the stiker object by the selectedStikerIdx in 
 function getStikers() { // return stikers array
     return gStikers.stikers;
 }
-function getStikersOnCanvas(){
+function getStikersOnCanvas() {
     return gStikers.stikersOnCanvas
 }
-function getStikerById(id){
+function getStikerById(id) {
     return gStikers.stikers.find(stiker => stiker.id === id)
-  
+
 }
 
-function cleanStikersFromCanvas(){
+function cleanStikersFromCanvas() {
     clearIsSelected()
     gStikers.selectedStikerIdx = 0;
     gStikers.stikersOnCanvas = [];

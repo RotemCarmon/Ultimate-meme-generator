@@ -40,29 +40,42 @@ function addEventListeners() {
         setAllPosses()
         drop(ev)
     })
-    
-    gCanvas.addEventListener('touchstart', (ev)=>{
+
+    gCanvas.addEventListener('touchstart', (ev) => {
         ev.preventDefault()
         canvasPressHandler(ev)
         dragAndDrop(ev)
     })
     gCanvas.addEventListener('touchend', (ev) => {
         ev.preventDefault()
+        drop(ev)
         dropStiker(ev)
         setAllPosses()
-        drop(ev)
     })
 }
 
-function touchHandler(ev){
-    var touch = ev.touches[0];
-    
-    var pos = { 
-        x: touch.pageX - touch.target.offsetLeft,
-        y: touch.pageY - touch.target.offsetTop
+function touchHandler(ev) {
+
+    var pos = {}
+
+    if (
+        ev.type === 'touchstart'
+        || ev.type === 'touchmove'
+        || ev.type === 'touchend'
+    ) {
+
+        pos = {
+            x: ev.changedTouches[0].pageX - ev.changedTouches[0].target.offsetLeft,
+            y: ev.changedTouches[0].pageY - ev.changedTouches[0].target.offsetTop
+        }
+    } else {
+        pos = {
+            x: ev.offsetX,
+            y: ev.offsetY
+        }
     }
 
-    console.log('You Touched', pos)
+    return pos
 }
 
 
@@ -250,9 +263,8 @@ function drawMark(idx) {
     gCtx.fillStyle = '#0077aa2e';
     gCtx.fill()
 }
-function canvasPressHandler(ev){
-    console.log(ev.type)
-    
+function canvasPressHandler(ev) {
+
 
     var txtPressed = getClickedTextPos(ev)
     var stikerPressed = getClickedStikerPos(ev)
@@ -260,15 +272,15 @@ function canvasPressHandler(ev){
         clearMarked()
         onRenderImg()
         return
-    }else if(txtPressed < 0) {
+    } else if (txtPressed < 0) {
         var stikerIdx = getClickedStikerPos(ev) // id in onCanvas array
         var stikersOnCanvas = getStikersOnCanvas()
-        var stikerId = stikersOnCanvas[stikerIdx].id    
+        var stikerId = stikersOnCanvas[stikerIdx].id
         updateSelectedStikerIdx(stikerId)
         updateIsSelected(stikerId)
         stikersOnCanvas.splice(stikerIdx, 1);
-    
-    }else{
+
+    } else {
         var marked = checkMark(txtPressed)
         if (marked) return
         setMarked(txtPressed)
@@ -282,26 +294,30 @@ function canvasPressHandler(ev){
 
 
 function dragAndDrop(ev) {
+    var pos = touchHandler(ev)
+
     setIsDragging(ev)
-    gMouseStartPos = { x: ev.offsetX, y: ev.offsetY }
-    gMousePrevPos = { x: ev.offsetX, y: ev.offsetY };
+    gMouseStartPos = { x: pos.x, y: pos.y }
+    gMousePrevPos = { x: pos.x, y: pos.y };
     gCanvas.addEventListener('mousemove', function (ev) {
         ev.preventDefault()
         ev.stopPropagation()
         whileDrag(ev)
     })
     gCanvas.addEventListener('touchmove', function (ev) {
-        ev.preventDefault()
-        ev.stopPropagation()
+        // ev.preventDefault()
+        // ev.stopPropagation()
         whileDrag(ev)
     })
-  
+
 }
+
 function whileDrag(ev) {
+    var pos = touchHandler(ev)
     var isDragged = getIsDragging()
     if (isDragged < 0) return
     if (!gMousePrevPos) gMousePrevPos = gMouseStartPos
-    var mouseCurrPos = { x: ev.offsetX, y: ev.offsetY }
+    var mouseCurrPos = { x: pos.x, y: pos.y }
     var delta = {
         x: mouseCurrPos.x - gMousePrevPos.x,
         y: mouseCurrPos.y - gMousePrevPos.y
@@ -312,7 +328,9 @@ function whileDrag(ev) {
     onRenderImg()
 }
 function drop(ev) {
-    var mouseEndPos = { x: ev.offsetX, y: ev.offsetY }
+    var pos = touchHandler(ev)
+
+    var mouseEndPos = { x: pos.x, y: pos.y }
     var delta = {
         x: mouseEndPos.x - gMousePrevPos.x,
         y: mouseEndPos.y - gMousePrevPos.y
@@ -344,12 +362,12 @@ function onCreateStikers() {  // create the img element on control panel
     var stikers = getStikers()
     var strHTMLs =
         stikers.map(stiker => {
-            return `<img src="${stiker.url}" alt="" data-stiker="${stiker.id}" class="stiker pointer" onmousedown="onStikerSelect(this)" draggable="true">`
+            return `<img src="${stiker.url}" alt="" data-stiker="${stiker.id}" class="stiker pointer" onmousedown="onStikerSelect(this)" ontouchstart="onStikerSelect(this)" draggable="true">`
         }).join('');
     var elStikers = document.querySelector('.stikers');
     elStikers.innerHTML = strHTMLs;
 }
-function onRenderStikers(){  // When the img is rendered this function rerenders the stikers on the canvas
+function onRenderStikers() {  // When the img is rendered this function rerenders the stikers on the canvas
     var stikersOnCanvas = getStikersOnCanvas();
     stikersOnCanvas.forEach(stiker => {
         var stikerObj = getStikerById(stiker.id)
@@ -372,14 +390,15 @@ function onStikerSelect(stiker) { // When stiker is pressed on control panel
     updateCurrStiker(stiker)
 }
 function dropStiker(ev) {
-    
-        var selectedStiker = getSelected()
-        if(selectedStiker >= 0){
-            var dropPos = { x: ev.offsetX, y: ev.offsetY }
-            updateStikerOnCanvas(ev)
-            onRenderStiker(dropPos)
-            clearIsSelected()
-        }
+
+    var selectedStiker = getSelected()
+    var pos = touchHandler(ev)
+    if (selectedStiker >= 0) {
+        var dropPos = { x: pos.x, y: pos.y }
+        updateStikerOnCanvas(ev)
+        onRenderStiker(dropPos)
+        clearIsSelected()
+    }
 }
 
 
