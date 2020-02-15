@@ -33,6 +33,7 @@ function addEventListeners() {
         ev.preventDefault()
         canvasPressHandler(ev)
         dragAndDrop(ev)
+        console.log(ev)
     })
     gCanvas.addEventListener('mouseup', (ev) => {
         ev.preventDefault()
@@ -45,6 +46,7 @@ function addEventListeners() {
         ev.preventDefault()
         canvasPressHandler(ev)
         dragAndDrop(ev)
+        console.log(ev)
     })
     gCanvas.addEventListener('touchend', (ev) => {
         ev.preventDefault()
@@ -75,9 +77,18 @@ function touchHandler(ev) {
         }
     }
 
-    return pos
+    var currPos = calabPos(ev, pos)
+    return currPos
 }
-
+function calabPos(ev, pos) {
+    var currWidth = ev.target.offsetWidth;
+    var currHeight = ev.target.offsetHeight;
+    var currPos = {
+        x: pos.x * (currWidth / 500),
+        y: pos.y * (currHeight / 500)
+    }
+    return currPos
+}
 
 // --- IMAGE GALLERY --- 
 
@@ -383,7 +394,7 @@ function onRenderStiker(stikerPos) {
     var img = new Image();
     img.src = currStiker.url
     img.onload = () => {
-        gCtx.drawImage(img, stikerPos.x - 50 , stikerPos.y - 50, 100, 100)
+        gCtx.drawImage(img, stikerPos.x - 50, stikerPos.y - 50, 100, 100)
     }
 }
 function onStikerSelect(stiker) { // When stiker is pressed on control panel

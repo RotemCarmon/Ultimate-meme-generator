@@ -164,7 +164,6 @@ var gStikers = {
             isSelected: false
         },
 
-
     ],
     stikersOnCanvas: []
 }
