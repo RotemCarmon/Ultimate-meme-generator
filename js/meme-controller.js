@@ -383,7 +383,7 @@ function onRenderStiker(stikerPos) {
     var img = new Image();
     img.src = currStiker.url
     img.onload = () => {
-        gCtx.drawImage(img, stikerPos.x, stikerPos.y, 100, 100)
+        gCtx.drawImage(img, stikerPos.x - 50 , stikerPos.y - 50, 100, 100)
     }
 }
 function onStikerSelect(stiker) { // When stiker is pressed on control panel

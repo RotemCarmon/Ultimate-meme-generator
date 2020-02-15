@@ -28,12 +28,14 @@
 
         <div class="meme-container flex space-between" style="display:none">
             <div class="canvas-container">
-                <canvas id="meme-canvas" width="500" height="500" ondrop="dropStiker(event)" ondragover="allowDrop(event)"></canvas>
+                <canvas id="meme-canvas" width="500" height="500" ondrop="dropStiker(event)"
+                    ondragover="allowDrop(event)"></canvas>
             </div>
 
             <div class="control-panel">
                 <div class="buttons grid">
-                    <input type="text" name="first-text" class="first-input center-center" id="first-text" placeholder="Enter Text Here">
+                    <input type="text" name="first-text" class="first-input center-center" id="first-text"
+                        placeholder="Enter Text Here">
                     <div class="lines">
                         <div class="round center-center button add-line fa fa-plus" onclick="onAddLine()"></div>
                         <div class="round center-center button remove-line fa fa-trash" onclick="onRemoveLine()"></div>
@@ -47,9 +49,11 @@
                         <div class="round button center-center fa fa-align-right" onclick="onAlignRight()"></div>
                         <div class="colors">
                             <label for="stroke" class="center-center">Line</label>
-                            <label for="fill"   class="center-center">Fill</label>
-                            <input class="round button" type="color" title="Stroke" name="stroke" id="stroke" value="#000000" onchange="onSetStrokeColor(this.value)">
-                            <input class="round button" type="color" title="Fill" name="fill" id="fill" value="#ffffff" onchange="onSetFillColor(this.value)">
+                            <label for="fill" class="center-center">Fill</label>
+                            <input class="round button" type="color" title="Stroke" name="stroke" id="stroke"
+                                value="#000000" onchange="onSetStrokeColor(this.value)">
+                            <input class="round button" type="color" title="Fill" name="fill" id="fill" value="#ffffff"
+                                onchange="onSetFillColor(this.value)">
                         </div>
 
                         <select list="fonts" value="Impact" class="round font-list" onchange="onSetFont(this.value)">
@@ -65,7 +69,7 @@
                     <div class="links flex space-around align-center">
                         <a href="#" onclick="onDownload(this)" download="" class="round button fa fa-download"></a>
                         <a href="#" onclick="onSaveImg()" class="round button fa fa-save"></a>
-                        <a href="#" onclick="" download="" class="round button fa fa-share-alt"></a>
+                        <a href="#" onclick=""  class="round button fa fa-share-alt"></a>
                     </div>
 
 
@@ -77,14 +81,15 @@
         <div class="img-gallery-container">
             <div class="search-container">
                 <div class="sreach-field flex justify-center">
-                    <input type="text" name="search" id="search" placeholder="WHAT ARE YOU LOOKING FOR?" onkeyup="onRenderImgs(this.value)" onchange="onSetKeywords(this.value)">
+                    <input type="text" name="search" id="search" placeholder="WHAT ARE YOU LOOKING FOR?"
+                        onkeyup="onRenderImgs(this.value)" onchange="onSetKeywords(this.value)">
                 </div>
                 <div class="freq-searched-container">
                     <ul class="freq-searched clean-list flex wrap align-center"></ul>
                 </div>
             </div>
             <div class="img-gallery">
-                
+
             </div>
         </div>
 
@@ -94,8 +99,10 @@
     <footer class="flex justify-center align-center">
         <h4>The Ultimate Meme Generator Created By Rotem Carmon</h4>
     </footer>
+
     <script src="js/meme-service.js"></script>
     <script src="js/meme-controller.js"></script>
+    <script src="js/upload-service.js"></script>
 </body>
 
 </html>

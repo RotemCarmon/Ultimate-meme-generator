@@ -135,46 +135,35 @@ var gStikers = {
     stikers: [
         {
             id: 0,
-            url: './stikers/mario mushroom.png',
-            // pos: { x: 0, y: 0 },
+            url: './stikers/1.png',
             isSelected: false
         },
         {
             id: 1,
-            url: './stikers/a funny dog sticker.png',
-            // pos: { x: 300, y: 100 },
+            url: './stikers/2.png',
             isSelected: false
         },
         {
             id: 2,
-            url: './stikers/cartoon sticker.png',
-            // pos: { x: 100, y: 300 },
+            url: './stikers/3.png',
             isSelected: false
         },
         {
             id: 3,
-            url: './stikers/challenge accepted sticker.png',
-            // pos: { x: 300, y: 300 },
+            url: './stikers/4.png',
             isSelected: false
         },
         {
             id: 4,
-            url: './stikers/false.png',
-            // pos: { x: 300, y: 100 },
+            url: './stikers/5.png',
             isSelected: false
         },
         {
             id: 5,
-            url: './stikers/nugs not drugs.png',
-            // pos: { x: 100, y: 300 },
+            url: './stikers/6.png',
             isSelected: false
         },
-        {
-            id: 6,
-            url: './stikers/present.png',
-            // pos: { x: 300, y: 300 },
-            isSelected: false
-        },
+
 
     ],
     stikersOnCanvas: []
@@ -482,7 +471,7 @@ function _createStikerPos(ev) { // creates a new stiker position object to be ad
     return {
         id: stiker.id,
         url: stiker.url,
-        pos: { x: pos.x, y: pos.y },
+        pos: { x: pos.x - 50, y: pos.y -50 },
         isSelected: false,
     }
 }
