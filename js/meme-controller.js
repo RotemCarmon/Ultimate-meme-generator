@@ -13,6 +13,7 @@ function onInit() {
     gCtx = gCanvas.getContext('2d');
     saveInitState()
     addEventListeners()
+    onGetKeywords()
     onRenderImgs()
     setAllPosses()
 }
@@ -72,13 +73,13 @@ function onImgSelect(img) {
 }
 function displayMemeEditor() {
     var elMeme = document.querySelector('.meme-container')
-    var elGallery = document.querySelector('.img-gallery')
+    var elGallery = document.querySelector('.img-gallery-container')
     elGallery.style.display = 'none'
     elMeme.style.display = 'flex'
 }
 function displayGallery() {
     var elMeme = document.querySelector('.meme-container')
-    var elGallery = document.querySelector('.img-gallery')
+    var elGallery = document.querySelector('.img-gallery-container')
     elGallery.style.display = 'grid'
     elMeme.style.display = 'none'
 }
@@ -91,6 +92,7 @@ function onSearchKeyWords(value) {
     return filteredImgs
 }
 function onRenderImgs(value) {
+    console.log('value',value);
     var imgGallery = onSearchKeyWords(value)
     var strHTMLs =
         imgGallery.map(img => {
@@ -98,6 +100,24 @@ function onRenderImgs(value) {
         }).join('');
     var elGallery = document.querySelector('.img-gallery');
     elGallery.innerHTML = strHTMLs;
+}
+function onSetKeywords(value){
+    setKeywords(value)
+    onGetKeywords()
+}
+function onGetKeywords(){
+    var freqKeywords = getfrequentKeywords();
+    // var freqKeywords = [];
+    // freqKeywords.push(getKeywords());
+    var arr = shuffleArray(freqKeywords)
+    console.log(arr)
+    var strHTMLs =``;
+    arr.forEach(keyword => {
+         strHTMLs += `
+        <li><a class="keyword" onclick="onRenderImgs('${keyword.keyword}')" style="font-size: ${10*keyword.searchCount}px">${keyword.keyword}</a></li>
+        `
+    })
+    document.querySelector('.freq-searched').innerHTML = strHTMLs;
 }
 
 // --- CONTROL PANEL ---

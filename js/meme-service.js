@@ -6,31 +6,33 @@ var gMarked;
 var gAllPosses;
 var gInitState;
 
+var gKeywords = {'funny': 7, 'cute': 4, 'dog': 2, 'sad': 5, 'happy':12, 'baby':9 }
+
 var gImgs = [
     {
         id: 0,
         url: './img/1.jpg',
-        keywords: ['funny', 'trump']
+        keywords: ['funny', 'trump', 'mad']
     },
     {
         id: 1,
         url: './img/2.jpg',
-        keywords: ['cute', 'dogs']
+        keywords: ['cute', 'dogs', 'kiss', 'romantic', 'animal']
     },
     {
         id: 2,
         url: './img/3.jpg',
-        keywords: ['cute', 'dogs', 'baby']
+        keywords: ['cute', 'dogs', 'baby', 'sleep','animal']
     },
     {
         id: 3,
         url: './img/4.jpg',
-        keywords: ['cute', 'cat']
+        keywords: ['cute', 'cat', 'sleep', 'tired','animal']
     },
     {
         id: 4,
         url: './img/5.jpg',
-        keywords: ['funny', 'cute', 'baby']
+        keywords: ['funny', 'cute', 'baby', 'strong']
     },
     {
         id: 5,
@@ -45,37 +47,37 @@ var gImgs = [
     {
         id: 7,
         url: './img/8.jpg',
-        keywords: ['funny']
+        keywords: ['funny', 'admiration', 'willy', 'wonka']
     },
     {
         id: 8,
         url: './img/9.jpg',
-        keywords: ['funny', 'cute', 'baby']
+        keywords: ['funny', 'cute', 'baby', 'happy']
     },
     {
         id: 9,
         url: './img/10.jpg',
-        keywords: ['funny']
+        keywords: ['funny', 'obama', 'barak', 'joy', 'laugh', 'happy']
     },
     {
         id: 10,
         url: './img/11.jpg',
-        keywords: ['funny', 'romantic', 'gay']
+        keywords: ['funny', 'romantic', 'gay', 'sport']
     },
     {
         id: 11,
         url: './img/12.jpg',
-        keywords: ['motivating', 'blaming']
+        keywords: ['motivating', 'blaming', 'chaim', 'hecht']
     },
     {
         id: 12,
         url: './img/13.jpg',
-        keywords: ['cheers', 'greeting']
+        keywords: ['cheers', 'greeting', 'rich', 'money']
     },
     {
         id: 13,
         url: './img/14.jpg',
-        keywords: ['meaningful', 'badass', 'intense']
+        keywords: ['meaningful', 'badass', 'intense', 'morphius']
     },
     {
         id: 14,
@@ -90,12 +92,12 @@ var gImgs = [
     {
         id: 16,
         url: './img/17.jpg',
-        keywords: ['putin', 'two']
+        keywords: ['putin', 'two', 'putin']
     },
     {
         id: 17,
         url: './img/18.jpg',
-        keywords: ['toy', 'imagine', 'scared']
+        keywords: ['toy', 'imagine', 'scared', 'buzz']
     },
 
 ]
@@ -245,6 +247,38 @@ function searchKeyWords(value) {
     })
     return filteredImgs;
 }
+function setKeywords(value){
+    if(value in gKeywords) gKeywords[value] += 1
+    else gKeywords[value] = 1
+    console.log('gKeywords',gKeywords);
+}
+function getfrequentKeywords() {
+
+    var keywords = JSON.parse(JSON.stringify(gKeywords));
+    var freqWords = [];
+   while(Object.keys(freqWords).length < 5){
+       if(!Object.keys(keywords).length > 0) return freqWords;
+
+       var currWord;
+       var currNum = 0;
+       for(const word in keywords){
+           if(keywords[word] > currNum){
+               currWord = word;
+               currNum = keywords[word];
+            }
+        }
+        
+            freqWords.push({keyword:currWord, searchCount: currNum})
+        
+    delete keywords[currWord];
+   }
+   return freqWords;
+
+}
+
+function getKeywords(){
+    return JSON.parse(JSON.stringify(gKeywords));
+}
 
 
 // TODO - Array of keywords objects contains keyword and num of times it've been search
@@ -344,4 +378,11 @@ function saveImg(){
     savedImgs.push(gCanvas.toDataURL())
     var str = JSON.stringify(savedImgs)
     localStorage.setItem('my-canvas', str)
+}
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array
 }

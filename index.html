@@ -76,12 +76,16 @@
 
         <div class="img-gallery-container">
             <div class="search-container">
-                <div class="sreach-field">
-                    <input type="text" name="search" id="search" placeholder="WHAT ARE YOU LOOKING FOR?" onkeyup="onRenderImgs(this.value)">
+                <div class="sreach-field flex justify-center">
+                    <input type="text" name="search" id="search" placeholder="WHAT ARE YOU LOOKING FOR?" onkeyup="onRenderImgs(this.value)" onchange="onSetKeywords(this.value)">
                 </div>
-                <div class="most-searched"></div>
+                <div class="freq-searched-container">
+                    <ul class="freq-searched clean-list flex wrap align-center"></ul>
+                </div>
             </div>
-            <div class="img-gallery"></div>
+            <div class="img-gallery">
+                
+            </div>
         </div>
 
 
