@@ -6,7 +6,7 @@ var gMarked;
 var gAllPosses;
 var gInitState;
 
-var gKeywords = {'funny': 7, 'cute': 4, 'dog': 2, 'sad': 5, 'happy':12, 'baby':9 }
+var gKeywords = { 'funny': 7, 'cute': 4, 'dog': 2, 'sad': 5, 'happy': 12, 'baby': 9 }
 
 var gImgs = [
     {
@@ -22,12 +22,12 @@ var gImgs = [
     {
         id: 2,
         url: './img/3.jpg',
-        keywords: ['cute', 'dogs', 'baby', 'sleep','animal']
+        keywords: ['cute', 'dogs', 'baby', 'sleep', 'animal']
     },
     {
         id: 3,
         url: './img/4.jpg',
-        keywords: ['cute', 'cat', 'sleep', 'tired','animal']
+        keywords: ['cute', 'cat', 'sleep', 'tired', 'animal']
     },
     {
         id: 4,
@@ -129,6 +129,49 @@ var gMeme = {
         },
     ],
 }
+var gStikers = {
+
+    selectedStikerIdx: 0,
+    stikers: [
+        {
+            id: 0,
+            url: './stikers/mario mushroom.png',
+            pos: { x: 0, y: 0 }
+        },
+        {
+            id: 1,
+            url: './stikers/a funny dog sticker.png',
+            pos: { x: 300, y: 100 }
+        },
+        {
+            id: 2,
+            url: './stikers/cartoon sticker.png',
+            pos: { x: 100, y: 300 }
+        },
+        {
+            id: 3,
+            url: './stikers/challenge accepted sticker.png',
+            pos: { x: 300, y: 300 }
+        },
+        {
+            id: 4,
+            url: './stikers/false.png',
+            pos: { x: 300, y: 100 }
+        },
+        {
+            id: 5,
+            url: './stikers/nugs not drugs.png',
+            pos: { x: 100, y: 300 }
+        },
+        {
+            id: 6,
+            url: './stikers/snoop sticker.png',
+            pos: { x: 300, y: 300 }
+        },
+
+    ]
+}
+
 
 
 
@@ -236,48 +279,59 @@ function upDatePos(delta) {
     var newPos = { x: prevPos.x + delta.x, y: prevPos.y + delta.y }
     gMeme.lines[currDragging].pos = newPos;
 }
+function getStiker() {
+    var currStiker = gStikers.selectedStikerIdx;
+    return gStikers.stikers[currStiker];
+}
+function getStikers() {
+    return gStikers.stikers;
+}
 // --- SEARCH ---
 
 function searchKeyWords(value) {
     var filteredImgs = gImgs.filter((img) => {
-        if(!value) return true
-        else{
+        if (!value) return true
+        else {
             return img.keywords.some(key => key.toLowerCase().indexOf(value.toLowerCase()) !== -1)
         }
     })
     return filteredImgs;
 }
-function setKeywords(value){
-    if(value in gKeywords) gKeywords[value] += 1
+function setKeywords(value) {
+    if (value in gKeywords) gKeywords[value] += 1
     else gKeywords[value] = 1
-    console.log('gKeywords',gKeywords);
+    console.log('gKeywords', gKeywords);
 }
-function getfrequentKeywords() {
+function getfrequentKeywords() {   // get only the 5 most frequently searched words
 
     var keywords = JSON.parse(JSON.stringify(gKeywords));
     var freqWords = [];
-   while(Object.keys(freqWords).length < 5){
-       if(!Object.keys(keywords).length > 0) return freqWords;
+    while (Object.keys(freqWords).length < 5) {
+        if (!Object.keys(keywords).length > 0) return freqWords;
 
-       var currWord;
-       var currNum = 0;
-       for(const word in keywords){
-           if(keywords[word] > currNum){
-               currWord = word;
-               currNum = keywords[word];
+        var currWord;
+        var currNum = 0;
+        for (const word in keywords) {
+            if (keywords[word] > currNum) {
+                currWord = word;
+                currNum = keywords[word];
             }
         }
-        
-            freqWords.push({keyword:currWord, searchCount: currNum})
-        
-    delete keywords[currWord];
-   }
-   return freqWords;
+
+        freqWords.push({ keyword: currWord, searchCount: currNum })
+
+        delete keywords[currWord];
+    }
+    return freqWords;
 
 }
 
-function getKeywords(){
-    return JSON.parse(JSON.stringify(gKeywords));
+function getArrayOfKeywords() {
+    var keywordsArr = [];
+    for (const key in gKeywords) {
+        keywordsArr.push({ keyword: key, searchCount: gKeywords[key] })
+    }
+    return keywordsArr;
 }
 
 
@@ -364,6 +418,23 @@ function getClickedTextPos(ev) {
     })
     return txtPressed
 }
+function getClickedStikerPos(ev) {
+    console.log(ev)
+    var stikerPosses = gStikers.stikers.map(stiker => stiker.pos)
+
+    var ex = ev.offsetX;
+    var ey = ev.offsetY;
+    var stikerPressed = stikerPosses.findIndex(pos => {
+        return ex > +pos.x
+            && ex < +(pos.x + 200)
+            && ey < +(pos.y + 200)
+            && ey > +pos.y
+    })
+
+    console.log('stikerPosses', stikerPosses);
+    return stikerPressed
+}
+
 
 function saveInitState() {
     gInitState = JSON.parse(JSON.stringify(gMeme));
@@ -371,7 +442,7 @@ function saveInitState() {
 function setInitState() {
     gMeme = JSON.parse(JSON.stringify(gInitState));
 }
-function saveImg(){
+function saveImg() {
     if (!localStorage.getItem('my-canvas')) savedImgs = [];
     else var savedImgs = JSON.parse(localStorage.getItem('my-canvas'))
 
@@ -385,4 +456,7 @@ function shuffleArray(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
     return array
+}
+function updateCurrStikerId(stiker) {
+    gStikers.selectedStikerIdx = stiker.dataset.stiker;
 }

@@ -15,6 +15,7 @@ function onInit() {
     addEventListeners()
     onGetKeywords()
     onRenderImgs()
+    onRenderStikers()
     setAllPosses()
 }
 function addEventListeners() {
@@ -27,6 +28,7 @@ function addEventListeners() {
     gCanvas.addEventListener('click', (ev) => {
         ev.preventDefault()
         OnPressText(ev);
+        onPressStiker(ev)
     })
     gCanvas.addEventListener('mousedown', (ev) => {
         ev.preventDefault()
@@ -71,6 +73,7 @@ function onImgSelect(img) {
     onRenderImg()
 
 }
+
 function displayMemeEditor() {
     var elMeme = document.querySelector('.meme-container')
     var elGallery = document.querySelector('.img-gallery-container')
@@ -92,7 +95,6 @@ function onSearchKeyWords(value) {
     return filteredImgs
 }
 function onRenderImgs(value) {
-    console.log('value',value);
     var imgGallery = onSearchKeyWords(value)
     var strHTMLs =
         imgGallery.map(img => {
@@ -101,20 +103,30 @@ function onRenderImgs(value) {
     var elGallery = document.querySelector('.img-gallery');
     elGallery.innerHTML = strHTMLs;
 }
+function onRenderStikers() {
+    var stikers = getStikers()
+    var strHTMLs =
+        stikers.map(stiker => {
+            return `<img src="${stiker.url}" alt="" data-stiker="${stiker.id}" class="stiker pointer" onclick="onStikerSelect(this)">`
+        }).join('');
+    var elStikers = document.querySelector('.stikers');
+    elStikers.innerHTML = strHTMLs;
+}
 function onSetKeywords(value){
     setKeywords(value)
     onGetKeywords()
 }
 function onGetKeywords(){
-    var freqKeywords = getfrequentKeywords();
-    // var freqKeywords = [];
-    // freqKeywords.push(getKeywords());
-    var arr = shuffleArray(freqKeywords)
-    console.log(arr)
+    // var freqKeywords = getfrequentKeywords();
+    // var arr = shuffleArray(freqKeywords)
+    var arr = getArrayOfKeywords()
     var strHTMLs =``;
     arr.forEach(keyword => {
+        var fontSize = 10*keyword.searchCount
+        if(fontSize > 150) fontSize = 150
+        else if(fontSize < 20) fontSize = 20
          strHTMLs += `
-        <li><a class="keyword" onclick="onRenderImgs('${keyword.keyword}')" style="font-size: ${10*keyword.searchCount}px">${keyword.keyword}</a></li>
+        <li><a class="keyword" onclick="onRenderImgs('${keyword.keyword}')" style="font-size: ${fontSize}px">${keyword.keyword.toLowerCase()}</a></li>
         `
     })
     document.querySelector('.freq-searched').innerHTML = strHTMLs;
@@ -214,6 +226,18 @@ function onRenderImg() {
         onRenderText()
     }
 }
+
+function onRenderStiker(){
+    var currStiker = getStiker()
+    var stikerPos = currStiker.pos;
+    var img = new Image();
+    img.src = currStiker.url
+    img.onload = () => {
+        gCtx.drawImage(img, stikerPos.x ,stikerPos.y , 150, 150)
+    }
+}
+
+
 function onRenderText() {
     var linesObjs = getLineObjs();
     linesObjs.forEach((line, idx) => {
@@ -252,6 +276,11 @@ function OnPressText(ev) {
     setMarked(txtPressed)
     onChooseLine(txtPressed)
     onRenderImg()
+}
+
+function onPressStiker(ev){
+    var stikerPressed = getClickedStikerPos(ev)
+    console.log(stikerPressed)
 }
 
 // DRAG & DROP
@@ -309,4 +338,8 @@ function toggleNavbar(elBtn) {
         document.body.classList.remove('burger')
 
     }
+}
+function onStikerSelect(stiker){
+    updateCurrStikerId(stiker)
+    onRenderStiker()
 }
