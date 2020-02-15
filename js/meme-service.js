@@ -136,47 +136,48 @@ var gStikers = {
         {
             id: 0,
             url: './stikers/mario mushroom.png',
-            pos: { x: 0, y: 0 },
+            // pos: { x: 0, y: 0 },
             isSelected: false
         },
         {
             id: 1,
             url: './stikers/a funny dog sticker.png',
-            pos: { x: 300, y: 100 },
+            // pos: { x: 300, y: 100 },
             isSelected: false
         },
         {
             id: 2,
             url: './stikers/cartoon sticker.png',
-            pos: { x: 100, y: 300 },
+            // pos: { x: 100, y: 300 },
             isSelected: false
         },
         {
             id: 3,
             url: './stikers/challenge accepted sticker.png',
-            pos: { x: 300, y: 300 },
+            // pos: { x: 300, y: 300 },
             isSelected: false
         },
         {
             id: 4,
             url: './stikers/false.png',
-            pos: { x: 300, y: 100 },
+            // pos: { x: 300, y: 100 },
             isSelected: false
         },
         {
             id: 5,
             url: './stikers/nugs not drugs.png',
-            pos: { x: 100, y: 300 },
+            // pos: { x: 100, y: 300 },
             isSelected: false
         },
         {
             id: 6,
             url: './stikers/present.png',
-            pos: { x: 300, y: 300 },
+            // pos: { x: 300, y: 300 },
             isSelected: false
         },
 
-    ]
+    ],
+    stikersOnCanvas: []
 }
 
 
@@ -286,13 +287,7 @@ function upDatePos(delta) {
     var newPos = { x: prevPos.x + delta.x, y: prevPos.y + delta.y }
     gMeme.lines[currDragging].pos =  newPos;
 }
-function getStiker() {
-    var currStiker = gStikers.selectedStikerIdx;
-    return gStikers.stikers[currStiker];
-}
-function getStikers() {
-    return gStikers.stikers;
-}
+
 // --- SEARCH ---
 
 function searchKeyWords(value) {
@@ -342,12 +337,8 @@ function getArrayOfKeywords() {
 }
 
 
-// TODO - Array of keywords objects contains keyword and num of times it've been search
-
 
 // --- Utils ---
-
-
 
 
 function getLineObjs() {
@@ -415,6 +406,7 @@ function checkMark(txtPressed) {
 }
 function getClickedTextPos(ev) {
     var allPosses = gAllPosses;
+    
     var ex = ev.offsetX;
     var ey = ev.offsetY;
     var txtPressed = allPosses.findIndex(pos => {
@@ -425,22 +417,7 @@ function getClickedTextPos(ev) {
     })
     return txtPressed
 }
-function getClickedStikerPos(ev) {
-    console.log(ev)
-    var stikerPosses = gStikers.stikers.map(stiker => stiker.pos)
 
-    var ex = ev.offsetX;
-    var ey = ev.offsetY;
-    var stikerPressed = stikerPosses.findIndex(pos => {
-        return ex > +pos.x
-            && ex < +(pos.x + 200)
-            && ey < +(pos.y + 200)
-            && ey > +pos.y
-    })
-
-    console.log('current stikerPosses', stikerPosses);
-    return stikerPressed
-}
 
 
 function saveInitState() {
@@ -448,6 +425,9 @@ function saveInitState() {
 }
 function setInitState() {
     gMeme = JSON.parse(JSON.stringify(gInitState));
+    cleanStikersFromCanvas()
+
+
 }
 function saveImg() {
     if (!localStorage.getItem('my-canvas')) savedImgs = [];
@@ -464,13 +444,79 @@ function shuffleArray(array) {
     }
     return array
 }
-function getStikerId(stiker){
+
+
+// --- STIKERS ---
+
+function getStikerId(stiker){  // Gets the id from the element's dataset
     return stiker.dataset.stiker
 }
-function updateCurrStikerId(stiker) {
+function updateCurrStiker(stiker) { // Update isSelected on stiker property to true
     var stikerId = getStikerId(stiker);
-    console.log('selected stiker', stikerId)
-    gStikers.stikers.forEach(stiker => stiker.isSelected = false)
+    updateIsSelected(stikerId)
+    updateSelectedStikerIdx(stikerId)
+}
+function updateSelectedStikerIdx(idx){
+    gStikers.selectedStikerIdx = idx;
+}
+function updateIsSelected(stikerId){
+    clearIsSelected()
     gStikers.stikers[stikerId].isSelected = true
-    gStikers.selectedStikerIdx = stikerId;
+}
+function clearIsSelected(){
+    gStikers.stikers.forEach(stiker => stiker.isSelected = false)
+}
+function getSelected(){
+    var selectedStiker = gStikers.stikers.find(stiker => stiker.isSelected)
+    if(selectedStiker) return selectedStiker.id;
+    
+}
+function updateStikerOnCanvas(ev){ // add a new stiker to the stikersOnCanvas Array
+    var stikerPos = _createStikerPos(ev)
+    gStikers.stikersOnCanvas.push(stikerPos)
+}
+function _createStikerPos(ev){ // creates a new stiker position object to be added to the stikersOnCanvas array
+    var stiker = getStiker();
+
+    return {
+        id: stiker.id,
+        url: stiker.url,
+        pos: {x:ev.offsetX, y:ev.offsetY},
+        isSelected: false,
+    }
+}
+function getClickedStikerPos(ev) {  // return the clicked stiker idx
+    var stikerPosses = gStikers.stikersOnCanvas.map(stiker => stiker.pos) // returns an array of all stikers idx position on the canvas
+
+    var ex = ev.offsetX;
+    var ey = ev.offsetY;  // mouse pressed position
+
+    var stikerPressedIdx = stikerPosses.findIndex(pos => {
+        return ex > +pos.x
+            && ex < +(pos.x + 100)
+            && ey < +(pos.y + 100)
+            && ey > +pos.y
+    })
+
+    return stikerPressedIdx  // returns the array idx of the pressed stiker by it's position on the canvas
+}
+function getStiker() { // returns the stiker object by the selectedStikerIdx in gStikers object
+    var currStiker = gStikers.selectedStikerIdx;
+    return gStikers.stikers[currStiker];
+}
+function getStikers() { // return stikers array
+    return gStikers.stikers;
+}
+function getStikersOnCanvas(){
+    return gStikers.stikersOnCanvas
+}
+function getStikerById(id){
+    return gStikers.stikers.find(stiker => stiker.id === id)
+  
+}
+
+function cleanStikersFromCanvas(){
+    clearIsSelected()
+    gStikers.selectedStikerIdx = 0;
+    gStikers.stikersOnCanvas = [];
 }
