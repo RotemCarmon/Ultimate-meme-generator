@@ -1,6 +1,19 @@
 'use strict';
 
 
+
+
+
+
+
+
+// TODO - get rid of allPosses 
+// TODO - in the line obj, calculate the size of the text and hold it in the obj
+// TODO - render stikers from an img element in stade of creating a new img every time
+
+
+
+
 // --- GLOBALS ---
 var gMarked;
 var gAllPosses;
@@ -133,8 +146,8 @@ var gMeme = {
     ],
 }
 var gStikers = {
-
     selectedStikerIdx: 0,
+    selectedStiker: null,
     stikers: [
         {
             id: 0,
@@ -443,13 +456,13 @@ function saveImg() {
     var str = JSON.stringify(savedImgs)
     localStorage.setItem('my-canvas', str)
 }
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array
-}
+// function shuffleArray(array) {
+//     for (let i = array.length - 1; i > 0; i--) {
+//         const j = Math.floor(Math.random() * (i + 1));
+//         [array[i], array[j]] = [array[j], array[i]];
+//     }
+//     return array
+// }
 
 
 // --- STIKERS ---
@@ -458,21 +471,23 @@ function getStikerId(stiker) {  // Gets the id from the element's dataset
     return stiker.dataset.stiker
 }
 function updateCurrStiker(stiker) { // Update isSelected on stiker property to true
+    gStikers.selectedStiker = stiker; //element
+
     var stikerId = getStikerId(stiker);
     updateIsSelected(stikerId)
     updateSelectedStikerIdx(stikerId)
 }
-function updateSelectedStikerIdx(idx) {
-    gStikers.selectedStikerIdx = idx;
+function clearIsSelected() {
+    gStikers.stikers.forEach(stiker => stiker.isSelected = false)
 }
 function updateIsSelected(stikerId) {
     clearIsSelected()
     gStikers.stikers[stikerId].isSelected = true
 }
-function clearIsSelected() {
-    gStikers.stikers.forEach(stiker => stiker.isSelected = false)
+function updateSelectedStikerIdx(idx) {
+    gStikers.selectedStikerIdx = idx;
 }
-function getSelected() {
+function getSelectedId() {  // RETURN THE STIKER WITH THE PROPERTY isSelected = true
     var selectedStiker = gStikers.stikers.find(stiker => stiker.isSelected)
     if (selectedStiker) return selectedStiker.id;
 
@@ -482,12 +497,14 @@ function updateStikerOnCanvas(ev) { // add a new stiker to the stikersOnCanvas A
     gStikers.stikersOnCanvas.push(stikerPos)
 }
 function _createStikerPos(ev) { // creates a new stiker position object to be added to the stikersOnCanvas array
-    var stiker = getStiker();
+    var stikerId = getSelectedId();
+    var stiker = getStikerById(stikerId) // stiker obj
     var pos = touchHandler(ev)
     return {
         id: stiker.id,
-        url: stiker.url,
+        element: getStiker(),
         pos: { x: pos.x - 50, y: pos.y -50 },
+
         isSelected: false,
     }
 }
@@ -508,8 +525,8 @@ function getClickedStikerPos(ev) {  // return the clicked stiker idx
     return stikerPressedIdx  // returns the array idx of the pressed stiker by it's position on the canvas
 }
 function getStiker() { // returns the stiker object by the selectedStikerIdx in gStikers object
-    var currStiker = gStikers.selectedStikerIdx;
-    return gStikers.stikers[currStiker];
+    var currStiker = gStikers.selectedStiker;
+    return currStiker
 }
 function getStikers() { // return stikers array
     return gStikers.stikers;

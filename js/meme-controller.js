@@ -297,8 +297,6 @@ function drawMark(idx) {
     gCtx.fill()
 }
 function canvasPressHandler(ev) {
-
-
     var txtPressed = getClickedTextPos(ev)
     var stikerPressed = getClickedStikerPos(ev)
     if (txtPressed < 0 && stikerPressed < 0) {
@@ -307,10 +305,13 @@ function canvasPressHandler(ev) {
         return
     } else if (txtPressed < 0) {
         var stikerIdx = getClickedStikerPos(ev) // id in onCanvas array
+        console.log('stikerIdx',stikerIdx);
         var stikersOnCanvas = getStikersOnCanvas()
-        var stikerId = stikersOnCanvas[stikerIdx].id
+        var stikerId = stikersOnCanvas[stikerIdx].id 
+        console.log('stikerId',stikerId);
         updateSelectedStikerIdx(stikerId)
         updateIsSelected(stikerId)
+        updateCurrStiker(stikersOnCanvas[stikerIdx].element)
         stikersOnCanvas.splice(stikerIdx, 1);
 
     } else {
@@ -399,31 +400,28 @@ function onCreateStikers() {  // create the img element on control panel
     var elStikers = document.querySelector('.stikers');
     elStikers.innerHTML = strHTMLs;
 }
+function onStikerSelect(stiker) { // When stiker is pressed on control panel
+    updateCurrStiker(stiker)
+
+}
+
+function onRenderStiker(stikerPos) {
+    var currStiker = getStiker()  // selectedStiker element in gStikers object
+    var img = currStiker;
+    gCtx.drawImage(img, stikerPos.x - 50, stikerPos.y - 50, 100, 100)
+    
+}
 function onRenderStikers() {  // When the img is rendered this function rerenders the stikers on the canvas
     var stikersOnCanvas = getStikersOnCanvas();
     stikersOnCanvas.forEach(stiker => {
-        var stikerObj = getStikerById(stiker.id)
-        var img = new Image();
-        img.src = stikerObj.url
-        img.onload = () => {
-            gCtx.drawImage(img, stiker.pos.x, stiker.pos.y, 100, 100)
-        }
+        var img = stiker.element
+        gCtx.drawImage(img, stiker.pos.x, stiker.pos.y, 100, 100)
+
     })
-}
-function onRenderStiker(stikerPos) {
-    var currStiker = getStiker()  // selectedStikerIdx in gStikers object
-    var img = new Image();
-    img.src = currStiker.url
-    img.onload = () => {
-        gCtx.drawImage(img, stikerPos.x - 50, stikerPos.y - 50, 100, 100)
-    }
-}
-function onStikerSelect(stiker) { // When stiker is pressed on control panel
-    updateCurrStiker(stiker)
 }
 function dropStiker(ev) {
 
-    var selectedStiker = getSelected()
+    var selectedStiker = getSelectedId()
     var pos = touchHandler(ev)
     if (selectedStiker >= 0) {
         var dropPos = { x: pos.x, y: pos.y }
