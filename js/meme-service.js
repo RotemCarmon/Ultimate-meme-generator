@@ -103,6 +103,8 @@ var gImgs = [
 ]
 var gMeme = {
     selectedImgId: 0,
+    selectedImg: {},
+
     selectedLineidx: 0,
 
     lines: [
@@ -115,6 +117,7 @@ var gMeme = {
             font: 'Impact',
             pos: { x: 100, y: 80 },
             isMarked: false,
+            isDragging: false,
         },
         {
             txt: 'ENTER TEXT HERE',
@@ -125,6 +128,7 @@ var gMeme = {
             font: 'Impact',
             pos: { x: 100, y: 450 },
             isMarked: false,
+            isDragging: false,
         },
     ],
 }
@@ -173,6 +177,7 @@ var gStikers = {
 // --- CONTROL PANEL ---
 
 function setText(txt) {
+    // gMeme.lines[gMeme.selectedLineidx].txt = txt
     gMeme.lines[gMeme.selectedLineidx].txt = txt
 }
 function setFontSize(diff) {
@@ -218,7 +223,7 @@ function alignCenter() {
     gMeme.lines[gMeme.selectedLineidx].pos.x = (500 - textWidth) / 2
 }
 function alignRight() {
-    var fullFont = getFullFont()
+   var fullFont = getFullFont()
     var text = getText()
     var textWidth = getTextWidth(text, fullFont)
     gMeme.lines[gMeme.selectedLineidx].pos.x = (500 - textWidth)
@@ -235,6 +240,7 @@ function createLine() {
         font: getFont(),
         pos: { x: 100, y: setY },
         isMarked: false,
+        isDragging: false,
     }
     gMeme.lines.push(newLine)
     gMeme.selectedLineidx = gMeme.lines.length - 1;
@@ -249,8 +255,17 @@ function getTextPos() {
 
 // --- IMAGE GALLERY ---
 
-function updateCurrImgId(id) {
-    gMeme.selectedImgId = id
+// function updateCurrImgId(id) {
+//     gMeme.selectedImgId = id //
+// }
+function getImgById(id){
+    var currImg = gImgs.find(img => img.id == id)
+
+    return currImg
+}
+function updateCurrImg(id) {
+    var img = getImgById(id)
+    gMeme.selectedImg = img;
 }
 function getImageGallery() {
     return gImgs;
@@ -259,9 +274,9 @@ function getImageGallery() {
 // --- MEME EDITOR ---
 
 function getImg() {
-    return gImgs[gMeme.selectedImgId];
+    return gMeme.selectedImg;
 }
-function setIsDragging(ev) {
+function setIsDragging(ev) {    // Change isDraggging to be saved in the line Obj
     var clickedText = getClickedTextPos(ev)
     if (clickedText < 0) return
     else gAllPosses[clickedText].isDragging = true
@@ -288,10 +303,12 @@ function searchKeyWords(value) {
     })
     return filteredImgs;
 }
+
 function setKeywords(value) {
     if (value in gKeywords) gKeywords[value] += 1
     else gKeywords[value] = 1
 }
+
 function getfrequentKeywords() {   // get only the 5 most frequently searched words
 
     var keywords = JSON.parse(JSON.stringify(gKeywords));
@@ -313,8 +330,8 @@ function getfrequentKeywords() {   // get only the 5 most frequently searched wo
         delete keywords[currWord];
     }
     return freqWords;
-
 }
+
 function getArrayOfKeywords() {
     var keywordsArr = [];
     for (const key in gKeywords) {

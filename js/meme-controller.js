@@ -7,6 +7,7 @@ var gCanvas;
 var gCtx
 var gMouseStartPos;
 var gMousePrevPos;
+var gImg;
 
 function onInit() {
     gCanvas = document.getElementById('meme-canvas');
@@ -17,7 +18,12 @@ function onInit() {
     onRenderImgs()
     onCreateStikers()
     setAllPosses()
+    gImg = new Image();
+
 }
+
+
+
 function addEventListeners() {
     var firstText = document.querySelector('.first-input');
     firstText.addEventListener('keyup', (ev) => {
@@ -49,7 +55,6 @@ function addEventListeners() {
         setAllPosses()
     })
 }
-
 function resize() {
     var elCanvasContainer = document.querySelector('.canvas-container')
     var width = elCanvasContainer.offsetWidth
@@ -92,39 +97,43 @@ function touchHandler(ev) {
         }
     }
 
-    var currPos = calabPos(ev, pos)
-    // console.log(currPos)
-    return currPos
-}
-function calabPos(ev, pos) {
-    var currWidth = ev.target.offsetWidth;
-    var currHeight = ev.target.offsetHeight;
-    // console.log('currWidth',currWidth);
-    // console.log('currHeight',currHeight);
-    // console.log('posX',pos.x)
 
-    // var widthRatio = (currWidth / 500)
-    // var heightRatio = (currHeight / 500)
-    // var currPos = {
-    //     x: pos.x * widthRatio ,
-    //     y: pos.y * heightRatio
-    // }
-    // console.log('currPos x', currPos.x)
-    // return currPos
+    // console.log(currPos)
     return pos
 }
+
 
 // --- IMAGE GALLERY --- 
 
 // }
+
+function onRenderImgs(value) {
+    var imgGallery = onSearchKeyWords(value)
+    var strHTMLs =
+        imgGallery.map(img => {
+            return `<img src="${img.url}" alt="" data-imgid="${img.id}" class="image pointer" onclick="onImgSelect(this)">`
+        }).join('');
+    var elGallery = document.querySelector('.img-gallery');
+    elGallery.innerHTML = strHTMLs;
+}
 function onImgSelect(img) {
-    var selectedImgId = img.dataset.img;
+    var selectedImgId = img.dataset.imgid;
     setInitState()
-    updateCurrImgId(selectedImgId)
+    // updateCurrImgId(selectedImgId)
+    updateCurrImg(selectedImgId)
     displayMemeEditor()
     updateProperties()
-    onRenderImg()
+    var currImg = getImg();
+    gImg.src = currImg.url
+    gImg.onload = () => {
+        onRenderImg()
+    }
 
+}
+function onRenderImg() {
+    gCtx.drawImage(gImg, 0, 0, gCanvas.width, gCanvas.height)
+    onRenderText()
+    onRenderStikers()
 }
 function displayMemeEditor() {
     var elMeme = document.querySelector('.meme-container')
@@ -151,22 +160,13 @@ function onSearchKeyWords(value) {
     var filteredImgs = searchKeyWords(value)
     return filteredImgs
 }
-function onRenderImgs(value) {
-    var imgGallery = onSearchKeyWords(value)
-    var strHTMLs =
-        imgGallery.map(img => {
-            return `<img src="${img.url}" alt="" data-img="${img.id}" class="image pointer" onclick="onImgSelect(this)">`
-        }).join('');
-    var elGallery = document.querySelector('.img-gallery');
-    elGallery.innerHTML = strHTMLs;
-}
+
 function onSetKeywords(value) {
     setKeywords(value)
     onGetKeywords()
 }
 function onGetKeywords() {
-    // var freqKeywords = getfrequentKeywords();
-    // var arr = shuffleArray(freqKeywords)
+
     var arr = getArrayOfKeywords()
     var strHTMLs = ``;
     arr.forEach(keyword => {
@@ -269,18 +269,6 @@ function onSaveImg() {
 
 // --- MEME EDITOR ---
 
-function onRenderImg() {
-    var currImg = getImg();
-    var img = new Image();
-    img.src = currImg.url
-    img.onload = () => {
-        gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height)
-        onRenderText()
-        onRenderStikers()
-
-
-    }
-}
 function onRenderText() {
     var linesObjs = getLineObjs();
     linesObjs.forEach((line, idx) => {
@@ -350,8 +338,8 @@ function dragAndDrop(ev) {
         whileDrag(ev)
     })
     gCanvas.addEventListener('touchmove', function (ev) {
-        // ev.preventDefault()
-        // ev.stopPropagation()
+        ev.preventDefault()
+        ev.stopPropagation()
         whileDrag(ev)
     })
 
@@ -369,7 +357,6 @@ function whileDrag(ev) {
 
     updatePos(delta)
     gMousePrevPos = mouseCurrPos
-    // setAllPosses()
     onRenderImg()
 }
 function drop(ev) {
