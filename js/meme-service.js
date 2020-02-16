@@ -101,7 +101,6 @@ var gImgs = [
     },
 
 ]
-
 var gMeme = {
     selectedImgId: 0,
     selectedLineidx: 0,
@@ -109,7 +108,7 @@ var gMeme = {
     lines: [
         {
             txt: 'ENTER TEXT HERE',
-            size: 35,
+            size: 45,
             align: 'left',
             color: '#000000',
             fillColor: '#ffffff',
@@ -124,7 +123,7 @@ var gMeme = {
             color: '#000000',
             fillColor: '#ffffff',
             font: 'Impact',
-            pos: { x: 100, y: 400 },
+            pos: { x: 100, y: 450 },
             isMarked: false,
         },
     ],
@@ -206,18 +205,20 @@ function getFont() {
 function alignLeft() {
     gMeme.lines[gMeme.selectedLineidx].pos.x = 0
 }
-function alignCenter() {
+function getFullFont(){
     var size = getFontSize()
     var font = getFont()
     var fullFont = `${size}px  ${font}`;
+    return fullFont
+}
+function alignCenter() {
+    var fullFont = getFullFont()
     var text = getText()
     var textWidth = getTextWidth(text, fullFont)
     gMeme.lines[gMeme.selectedLineidx].pos.x = (500 - textWidth) / 2
 }
 function alignRight() {
-    var size = getFontSize()
-    var font = getFont()
-    var fullFont = `${size}px  ${font}`;
+    var fullFont = getFullFont()
     var text = getText()
     var textWidth = getTextWidth(text, fullFont)
     gMeme.lines[gMeme.selectedLineidx].pos.x = (500 - textWidth)
@@ -268,7 +269,7 @@ function setIsDragging(ev) {
 function getIsDragging() {
     return gAllPosses.findIndex(pos => pos.isDragging === true)
 }
-function upDatePos(delta) {
+function updatePos(delta) {
     var currDragging = getIsDragging()
     if (currDragging < 0) return
     var prevPos = gMeme.lines[currDragging].pos
@@ -314,7 +315,6 @@ function getfrequentKeywords() {   // get only the 5 most frequently searched wo
     return freqWords;
 
 }
-
 function getArrayOfKeywords() {
     var keywordsArr = [];
     for (const key in gKeywords) {
@@ -504,7 +504,6 @@ function getStikerById(id) {
     return gStikers.stikers.find(stiker => stiker.id === id)
 
 }
-
 function cleanStikersFromCanvas() {
     clearIsSelected()
     gStikers.selectedStikerIdx = 0;

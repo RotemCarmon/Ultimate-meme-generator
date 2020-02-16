@@ -11,7 +11,7 @@
 </head>
 
 <body onload="onInit()">
-    <header class="flex space-between align-center">
+    <header class="flex space-between align-center" >
         <p>M</p>
         <h1><span>M</span>eme Generator</h1>
         <div class="fa fa-bars border menu-btn" onclick="toggleNavbar(this)"></div>
@@ -24,10 +24,10 @@
             </ul>
         </nav>
     </header>
-    <div class="main-container container ">
-
-        <div class="meme-container flex space-between" style="display:none">
-            <div class="canvas-container">
+    
+    <div class="main-container container " >
+        <div class="meme-container flex space-between" style="display: none;" >
+            <div class="canvas-container"  >
                 <canvas id="meme-canvas" width="500" height="500" ondrop="dropStiker(event)"
                     ondragover="allowDrop(event)"></canvas>
             </div>

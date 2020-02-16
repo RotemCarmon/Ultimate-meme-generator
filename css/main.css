@@ -387,6 +387,8 @@
             }
             header {
                 position: relative;
+                
+                min-width:100vw;
             }
             .burger .navbar-container {
                 display: flex;
@@ -395,7 +397,9 @@
                 display: none;
                 position: absolute;
                 right: 0;
-                top: 80px;
+                top:0;
+                width: 100vw;
+                background-color: tomato;
                 padding: 0 5px 2px;
             }
             .nav-bar {
@@ -404,6 +408,7 @@
                 flex-direction: column;
                 padding: 0;
                 margin: 0;
+                height: 100vh;
             }
             .nav-bar li {
                 height: fit-content;

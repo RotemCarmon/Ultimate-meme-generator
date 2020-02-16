@@ -24,16 +24,12 @@ function addEventListeners() {
         ev.preventDefault()
         ev.stopPropagation()
         onTextInput()
+        setAllPosses()
     });
-    gCanvas.addEventListener('click', (ev) => {
-        ev.preventDefault()
-        // OnPressText(ev);
-    })
     gCanvas.addEventListener('mousedown', (ev) => {
         ev.preventDefault()
         canvasPressHandler(ev)
         dragAndDrop(ev)
-        console.log(ev)
     })
     gCanvas.addEventListener('mouseup', (ev) => {
         ev.preventDefault()
@@ -41,12 +37,10 @@ function addEventListeners() {
         setAllPosses()
         drop(ev)
     })
-
     gCanvas.addEventListener('touchstart', (ev) => {
         ev.preventDefault()
         canvasPressHandler(ev)
         dragAndDrop(ev)
-        console.log(ev)
     })
     gCanvas.addEventListener('touchend', (ev) => {
         ev.preventDefault()
@@ -56,6 +50,27 @@ function addEventListeners() {
     })
 }
 
+function resize() {
+    var elCanvasContainer = document.querySelector('.canvas-container')
+    var width = elCanvasContainer.offsetWidth
+    var height = elCanvasContainer.offsetWidth
+    document.querySelector('canvas').width = width
+    document.querySelector('canvas').height = height
+    fitLinesToSize()
+    onRenderImg()
+}
+function fitLinesToSize() {
+    var lines = getLineObjs();
+    var fullFont = getFullFont()
+    var text = getText()
+    var textWidth = getTextWidth(text, fullFont)
+    var canvasWidth = document.querySelector('canvas').width;
+    var canvasHeight = document.querySelector('canvas').height;
+    lines.forEach(line => line.pos.x = (canvasWidth - textWidth) / 2);
+    lines[1].pos.y = canvasHeight - 50
+
+
+}
 function touchHandler(ev) {
 
     var pos = {}
@@ -78,16 +93,25 @@ function touchHandler(ev) {
     }
 
     var currPos = calabPos(ev, pos)
+    // console.log(currPos)
     return currPos
 }
 function calabPos(ev, pos) {
     var currWidth = ev.target.offsetWidth;
     var currHeight = ev.target.offsetHeight;
-    var currPos = {
-        x: pos.x * (currWidth / 500),
-        y: pos.y * (currHeight / 500)
-    }
-    return currPos
+    // console.log('currWidth',currWidth);
+    // console.log('currHeight',currHeight);
+    // console.log('posX',pos.x)
+
+    // var widthRatio = (currWidth / 500)
+    // var heightRatio = (currHeight / 500)
+    // var currPos = {
+    //     x: pos.x * widthRatio ,
+    //     y: pos.y * heightRatio
+    // }
+    // console.log('currPos x', currPos.x)
+    // return currPos
+    return pos
 }
 
 // --- IMAGE GALLERY --- 
@@ -107,12 +131,17 @@ function displayMemeEditor() {
     var elGallery = document.querySelector('.img-gallery-container')
     elGallery.style.display = 'none'
     elMeme.style.display = 'flex'
+    resize()
+
+
+
 }
 function displayGallery() {
     var elMeme = document.querySelector('.meme-container')
     var elGallery = document.querySelector('.img-gallery-container')
     elGallery.style.display = 'grid'
     elMeme.style.display = 'none'
+
 }
 
 
@@ -180,18 +209,22 @@ function onTextInput() {
 }
 function onSetFontSize(diff) {
     setFontSize(diff)
+    setAllPosses()
     onRenderImg()
 }
 function onAlignLeft() {
     alignLeft()
+    setAllPosses()
     onRenderImg()
 }
 function onAlignCenter() {
     alignCenter()
+    setAllPosses()
     onRenderImg()
 }
 function onAlignRight() {
     alignRight()
+    setAllPosses()
     onRenderImg()
 }
 function onAddLine() {
@@ -256,6 +289,7 @@ function onRenderText() {
         var txtPos = line.pos;
         var txtFont = line.font;
         gCtx.font = size + 'px ' + txtFont;
+        gCtx.lineWidth = 4
         gCtx.strokeStyle = line.color;
         gCtx.fillStyle = line.fillColor;
         gCtx.textAlign = line.align;
@@ -270,7 +304,7 @@ function drawMark(idx) {
     var allPosses = getAllPosses()
     var currPos = allPosses[idx];
     gCtx.beginPath();
-    gCtx.rect(currPos.x - 10, currPos.y - currPos.height - 10, currPos.width + 20, currPos.height + 30);
+    gCtx.rect(currPos.x - 30, currPos.y - currPos.height - 10, currPos.width + 60, currPos.height + 30);
     gCtx.fillStyle = '#0077aa2e';
     gCtx.fill()
 }
@@ -322,7 +356,6 @@ function dragAndDrop(ev) {
     })
 
 }
-
 function whileDrag(ev) {
     var pos = touchHandler(ev)
     var isDragged = getIsDragging()
@@ -334,8 +367,9 @@ function whileDrag(ev) {
         y: mouseCurrPos.y - gMousePrevPos.y
     }
 
-    upDatePos(delta)
+    updatePos(delta)
     gMousePrevPos = mouseCurrPos
+    // setAllPosses()
     onRenderImg()
 }
 function drop(ev) {
@@ -346,7 +380,7 @@ function drop(ev) {
         x: mouseEndPos.x - gMousePrevPos.x,
         y: mouseEndPos.y - gMousePrevPos.y
     }
-    upDatePos(delta)
+    updatePos(delta)
     onRenderImg()
 
 }
