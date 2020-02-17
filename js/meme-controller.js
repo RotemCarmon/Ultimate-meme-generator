@@ -17,11 +17,9 @@ function onInit() {
     onGetKeywords()
     onRenderImgs()
     onCreateStikers()
-    setAllPosses()
     gImg = new Image();
 
 }
-
 
 
 function addEventListeners() {
@@ -30,7 +28,6 @@ function addEventListeners() {
         ev.preventDefault()
         ev.stopPropagation()
         onTextInput()
-        setAllPosses()
     });
     gCanvas.addEventListener('mousedown', (ev) => {
         ev.preventDefault()
@@ -40,7 +37,6 @@ function addEventListeners() {
     gCanvas.addEventListener('mouseup', (ev) => {
         ev.preventDefault()
         dropStiker(ev)
-        setAllPosses()
         drop(ev)
     })
     gCanvas.addEventListener('touchstart', (ev) => {
@@ -52,7 +48,6 @@ function addEventListeners() {
         ev.preventDefault()
         drop(ev)
         dropStiker(ev)
-        setAllPosses()
     })
 }
 function resize() {
@@ -65,7 +60,7 @@ function resize() {
     onRenderImg()
 }
 function fitLinesToSize() {
-    var lines = getLineObjs();
+    var lines = getLinesArray();
     var fullFont = getFullFont()
     var text = getText()
     var textWidth = getTextWidth(text, fullFont)
@@ -77,7 +72,6 @@ function fitLinesToSize() {
 
 }
 function touchHandler(ev) {
-
     var pos = {}
 
     if (
@@ -96,16 +90,11 @@ function touchHandler(ev) {
             y: ev.offsetY
         }
     }
-
-
-    // console.log(currPos)
     return pos
 }
 
 
 // --- IMAGE GALLERY --- 
-
-// }
 
 function onRenderImgs(value) {
     var imgGallery = onSearchKeyWords(value)
@@ -119,7 +108,6 @@ function onRenderImgs(value) {
 function onImgSelect(img) {
     var selectedImgId = img.dataset.imgid;
     setInitState()
-    // updateCurrImgId(selectedImgId)
     updateCurrImg(selectedImgId)
     displayMemeEditor()
     updateProperties()
@@ -160,7 +148,6 @@ function onSearchKeyWords(value) {
     var filteredImgs = searchKeyWords(value)
     return filteredImgs
 }
-
 function onSetKeywords(value) {
     setKeywords(value)
     onGetKeywords()
@@ -182,7 +169,7 @@ function onGetKeywords() {
 
 // --- CONTROL PANEL ---
 
-function onChooseLine(line) {
+function onChooseLine(line) {  // line = object
     setCurrLine(line);
     updateProperties()
 }
@@ -209,22 +196,18 @@ function onTextInput() {
 }
 function onSetFontSize(diff) {
     setFontSize(diff)
-    setAllPosses()
     onRenderImg()
 }
 function onAlignLeft() {
     alignLeft()
-    setAllPosses()
     onRenderImg()
 }
 function onAlignCenter() {
     alignCenter()
-    setAllPosses()
     onRenderImg()
 }
 function onAlignRight() {
     alignRight()
-    setAllPosses()
     onRenderImg()
 }
 function onAddLine() {
@@ -270,7 +253,7 @@ function onSaveImg() {
 // --- MEME EDITOR ---
 
 function onRenderText() {
-    var linesObjs = getLineObjs();
+    var linesObjs = getLinesArray();
     linesObjs.forEach((line, idx) => {
         var txt = (line.txt).toUpperCase();
         var size = line.size
@@ -283,32 +266,30 @@ function onRenderText() {
         gCtx.textAlign = line.align;
         gCtx.strokeText(txt, txtPos.x, txtPos.y)
         gCtx.fillText(txt, txtPos.x, txtPos.y)
-        if (line.isMarked) drawMark(idx)
+        if (line.isMarked) drawMark(line)
 
     }
     )
 }
-function drawMark(idx) {
-    var allPosses = getAllPosses()
-    var currPos = allPosses[idx];
+function drawMark(line) {
+
+    var markSize = calcMarkSize(line);
     gCtx.beginPath();
-    gCtx.rect(currPos.x - 30, currPos.y - currPos.height - 10, currPos.width + 60, currPos.height + 30);
+    gCtx.rect(markSize.x - 30, markSize.y - markSize.height - 10, markSize.width + 60, markSize.height + 30);
     gCtx.fillStyle = '#0077aa2e';
     gCtx.fill()
 }
 function canvasPressHandler(ev) {
-    var txtPressed = getClickedTextPos(ev)
+    var txtPressed = getClickedTextPos(ev) // return the line object
     var stikerPressed = getClickedStikerPos(ev)
-    if (txtPressed < 0 && stikerPressed < 0) {
+    if (!txtPressed && stikerPressed < 0) {
         clearMarked()
         onRenderImg()
         return
-    } else if (txtPressed < 0) {
+    } else if (!txtPressed) {
         var stikerIdx = getClickedStikerPos(ev) // id in onCanvas array
-        console.log('stikerIdx',stikerIdx);
         var stikersOnCanvas = getStikersOnCanvas()
-        var stikerId = stikersOnCanvas[stikerIdx].id 
-        console.log('stikerId',stikerId);
+        var stikerId = stikersOnCanvas[stikerIdx].id
         updateSelectedStikerIdx(stikerId)
         updateIsSelected(stikerId)
         updateCurrStiker(stikersOnCanvas[stikerIdx].element)
@@ -329,8 +310,8 @@ function canvasPressHandler(ev) {
 
 function dragAndDrop(ev) {
     var pos = touchHandler(ev)
-
     setIsDragging(ev)
+
     gMouseStartPos = { x: pos.x, y: pos.y }
     gMousePrevPos = { x: pos.x, y: pos.y };
     gCanvas.addEventListener('mousemove', function (ev) {
@@ -362,15 +343,14 @@ function whileDrag(ev) {
 }
 function drop(ev) {
     var pos = touchHandler(ev)
-
     var mouseEndPos = { x: pos.x, y: pos.y }
     var delta = {
         x: mouseEndPos.x - gMousePrevPos.x,
         y: mouseEndPos.y - gMousePrevPos.y
     }
     updatePos(delta)
+    clearIsDragging()
     onRenderImg()
-
 }
 function toggleNavbar(elBtn) {
     if (elBtn.classList.contains('fa-bars')) {
@@ -404,12 +384,11 @@ function onStikerSelect(stiker) { // When stiker is pressed on control panel
     updateCurrStiker(stiker)
 
 }
-
 function onRenderStiker(stikerPos) {
     var currStiker = getStiker()  // selectedStiker element in gStikers object
     var img = currStiker;
     gCtx.drawImage(img, stikerPos.x - 50, stikerPos.y - 50, 100, 100)
-    
+
 }
 function onRenderStikers() {  // When the img is rendered this function rerenders the stikers on the canvas
     var stikersOnCanvas = getStikersOnCanvas();
@@ -420,7 +399,6 @@ function onRenderStikers() {  // When the img is rendered this function rerender
     })
 }
 function dropStiker(ev) {
-
     var selectedStiker = getSelectedId()
     var pos = touchHandler(ev)
     if (selectedStiker >= 0) {
@@ -430,8 +408,3 @@ function dropStiker(ev) {
         clearIsSelected()
     }
 }
-
-
-
-
-

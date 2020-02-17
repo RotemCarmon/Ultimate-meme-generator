@@ -138,6 +138,7 @@
             margin-right: 10px;
             padding: 0 20px;
             box-shadow: inset 0 0 6px 0 #65587f;
+            user-select: none;
         }
 
         .buttons {
@@ -328,11 +329,11 @@
                 width: 100px;
             }
             .button {
-                width: 35px;
-                height: 35px;
-                padding: 8px 8px;
-                font-size: 1rem;
-                line-height: 1rem;
+                /* width: 35px;
+                height: 35px; */
+                /* padding: 8px 8px; */
+                /* font-size: 1rem;
+                line-height: 1rem; */
             }
         }
 

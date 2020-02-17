@@ -1,22 +1,7 @@
 'use strict';
 
-
-
-
-
-
-
-
-// TODO - get rid of allPosses 
-// TODO - in the line obj, calculate the size of the text and hold it in the obj
-// TODO - render stikers from an img element in stade of creating a new img every time
-
-
-
-
 // --- GLOBALS ---
 var gMarked;
-var gAllPosses;
 var gInitState;
 
 var gKeywords = { 'funny': 7, 'cute': 4, 'dog': 2, 'sad': 5, 'happy': 12, 'baby': 9 }
@@ -185,12 +170,9 @@ var gStikers = {
 }
 
 
-
-
 // --- CONTROL PANEL ---
 
 function setText(txt) {
-    // gMeme.lines[gMeme.selectedLineidx].txt = txt
     gMeme.lines[gMeme.selectedLineidx].txt = txt
 }
 function setFontSize(diff) {
@@ -223,7 +205,7 @@ function getFont() {
 function alignLeft() {
     gMeme.lines[gMeme.selectedLineidx].pos.x = 0
 }
-function getFullFont(){
+function getFullFont() {
     var size = getFontSize()
     var font = getFont()
     var fullFont = `${size}px  ${font}`;
@@ -236,7 +218,7 @@ function alignCenter() {
     gMeme.lines[gMeme.selectedLineidx].pos.x = (500 - textWidth) / 2
 }
 function alignRight() {
-   var fullFont = getFullFont()
+    var fullFont = getFullFont()
     var text = getText()
     var textWidth = getTextWidth(text, fullFont)
     gMeme.lines[gMeme.selectedLineidx].pos.x = (500 - textWidth)
@@ -268,12 +250,8 @@ function getTextPos() {
 
 // --- IMAGE GALLERY ---
 
-// function updateCurrImgId(id) {
-//     gMeme.selectedImgId = id //
-// }
-function getImgById(id){
+function getImgById(id) {
     var currImg = gImgs.find(img => img.id == id)
-
     return currImg
 }
 function updateCurrImg(id) {
@@ -289,20 +267,23 @@ function getImageGallery() {
 function getImg() {
     return gMeme.selectedImg;
 }
-function setIsDragging(ev) {    // Change isDraggging to be saved in the line Obj
-    var clickedText = getClickedTextPos(ev)
-    if (clickedText < 0) return
-    else gAllPosses[clickedText].isDragging = true
-}
-function getIsDragging() {
-    return gAllPosses.findIndex(pos => pos.isDragging === true)
-}
 function updatePos(delta) {
     var currDragging = getIsDragging()
     if (currDragging < 0) return
     var prevPos = gMeme.lines[currDragging].pos
     var newPos = { x: prevPos.x + delta.x, y: prevPos.y + delta.y }
     gMeme.lines[currDragging].pos = newPos;
+}
+function setIsDragging(ev) {    // Change isDraggging to be saved in the line Obj
+    var clickedLine = getClickedTextPos(ev)
+    if (!clickedLine) return
+    else clickedLine.isDragging = true
+}
+function getIsDragging() {
+    return gMeme.lines.findIndex(line => line.isDragging === true)
+}
+function clearIsDragging(){
+    gMeme.lines.forEach(line => line.isDragging = false)
 }
 
 // --- SEARCH ---
@@ -316,19 +297,15 @@ function searchKeyWords(value) {
     })
     return filteredImgs;
 }
-
 function setKeywords(value) {
     if (value in gKeywords) gKeywords[value] += 1
     else gKeywords[value] = 1
 }
-
 function getfrequentKeywords() {   // get only the 5 most frequently searched words
-
     var keywords = JSON.parse(JSON.stringify(gKeywords));
     var freqWords = [];
     while (Object.keys(freqWords).length < 5) {
         if (!Object.keys(keywords).length > 0) return freqWords;
-
         var currWord;
         var currNum = 0;
         for (const word in keywords) {
@@ -337,14 +314,11 @@ function getfrequentKeywords() {   // get only the 5 most frequently searched wo
                 currNum = keywords[word];
             }
         }
-
         freqWords.push({ keyword: currWord, searchCount: currNum })
-
         delete keywords[currWord];
     }
     return freqWords;
 }
-
 function getArrayOfKeywords() {
     var keywordsArr = [];
     for (const key in gKeywords) {
@@ -358,20 +332,19 @@ function getArrayOfKeywords() {
 // --- Utils ---
 
 
-function getLineObjs() {
+function getLinesArray() {
     var lines = gMeme.lines
     return lines
 }
+function getLineIdx(currLine){
+    var lines = getLinesArray();
+    return lines.findIndex(line => line.pos === currLine.pos)
+}
 function setCurrLine(line) {
-    if (line >= 0) {
-        gMeme.selectedLineidx = line;
+    var lineIdx = getLineIdx(line)
+    if (lineIdx >= 0) {
+        gMeme.selectedLineidx = lineIdx;
         return
-    }
-    var linesLength = gMeme.lines.length;
-    if (gMeme.selectedLineidx < linesLength - 1) {
-        gMeme.selectedLineidx++
-    } else {
-        gMeme.selectedLineidx = 0;
     }
 }
 function getCurrLine() {
@@ -385,68 +358,49 @@ function getTextWidth(text, font) {
     var metrics = context.measureText(text);
     return metrics.width;
 }
-function setAllPosses() {
-    var allPosses = gMeme.lines.map(line => {
-        var txtPos = line.pos;
-        var textHeight = line.size;
-        var fullFont = `${line.size}px  ${line.font}`
-        var textWidth = getTextWidth(line.txt, fullFont)
-
-        return createPosObj(txtPos.x, txtPos.y, textWidth, textHeight)
-
-    })
-    gAllPosses = allPosses;
-    return allPosses
-}
-function getAllPosses() {
-    return gAllPosses
-}
-function createPosObj(x, y, width, height) {
-    return {
-        x,
-        y,
-        width,
-        height,
-        isDragging: false
-    }
-}
 function setMarked(mark) {
     clearMarked()
-    gMeme.lines[mark].isMarked = true;
+    mark.isMarked = true;
     gMarked = mark;
 }
 function clearMarked() {
     gMeme.lines.forEach(line => line.isMarked = false)
 }
 function checkMark(txtPressed) {
-    return gMeme.lines[txtPressed].isMarked;
+    return txtPressed.isMarked;
+}
+function calcMarkSize(line) {
+    var textHeight = line.size;
+    var fullFont = `${line.size}px  ${line.font}`
+    var textWidth = getTextWidth(line.txt, fullFont)
+    var markSize = { x: line.pos.x, y: line.pos.y, width: textWidth, height: textHeight }
+    return markSize;
 }
 function getClickedTextPos(ev) {
     var pos = touchHandler(ev)
-
-    var allPosses = gAllPosses;
-
     var ex = pos.x;
     var ey = pos.y;
-    var txtPressed = allPosses.findIndex(pos => {
-        return ex > +pos.x
-            && ex < +(pos.x + pos.width)
-            && ey > +(pos.y - pos.height)
-            && ey < +pos.y
-    })
-    return txtPressed
+
+    var lines = getLinesArray()
+    var currLine = lines.find(line => {
+        var markSize = calcMarkSize(line);
+        if(
+            ex > +markSize.x
+                && ex < +(markSize.x + markSize.width)
+                && ey > +(markSize.y - markSize.height)
+                && ey < +markSize.y
+        ) return true
+        
+    } )
+    
+    return currLine
 }
-
-
-
 function saveInitState() {
     gInitState = JSON.parse(JSON.stringify(gMeme));
 }
 function setInitState() {
     gMeme = JSON.parse(JSON.stringify(gInitState));
     cleanStikersFromCanvas()
-
-
 }
 function saveImg() {
     if (!localStorage.getItem('my-canvas')) savedImgs = [];
@@ -456,13 +410,6 @@ function saveImg() {
     var str = JSON.stringify(savedImgs)
     localStorage.setItem('my-canvas', str)
 }
-// function shuffleArray(array) {
-//     for (let i = array.length - 1; i > 0; i--) {
-//         const j = Math.floor(Math.random() * (i + 1));
-//         [array[i], array[j]] = [array[j], array[i]];
-//     }
-//     return array
-// }
 
 
 // --- STIKERS ---
@@ -503,7 +450,7 @@ function _createStikerPos(ev) { // creates a new stiker position object to be ad
     return {
         id: stiker.id,
         element: getStiker(),
-        pos: { x: pos.x - 50, y: pos.y -50 },
+        pos: { x: pos.x - 50, y: pos.y - 50 },
 
         isSelected: false,
     }
