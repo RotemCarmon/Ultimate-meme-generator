@@ -54,8 +54,11 @@ function resize() {
     var elCanvasContainer = document.querySelector('.canvas-container')
     var width = elCanvasContainer.offsetWidth
     var height = elCanvasContainer.offsetWidth
-    document.querySelector('canvas').width = width
-    document.querySelector('canvas').height = height
+    console.log('width', width);
+    console.log('height', height);
+    const canvas = document.querySelector('canvas')
+    canvas.width = width
+    canvas.height = height
     fitLinesToSize()
     onRenderImg()
 }
@@ -157,8 +160,8 @@ function onGetKeywords() {
     var arr = getArrayOfKeywords()
     var strHTMLs = ``;
     arr.forEach(keyword => {
-        var fontSize = 10 * keyword.searchCount
-        if (fontSize > 150) fontSize = 150
+        var fontSize = 5 * keyword.searchCount
+        if (fontSize > 120) fontSize = 80
         else if (fontSize < 20) fontSize = 20
         strHTMLs += `
         <li><a class="keyword" onclick="onRenderImgs('${keyword.keyword}')" style="font-size: ${fontSize}px">${keyword.keyword.toLowerCase()}</a></li>
@@ -271,14 +274,15 @@ function onRenderText() {
     }
     )
 }
-function drawMark(line) {
 
+function drawMark(line) {
     var markSize = calcMarkSize(line);
     gCtx.beginPath();
     gCtx.rect(markSize.x - 30, markSize.y - markSize.height - 10, markSize.width + 60, markSize.height + 30);
     gCtx.fillStyle = '#0077aa2e';
     gCtx.fill()
 }
+
 function canvasPressHandler(ev) {
     var txtPressed = getClickedTextPos(ev) // return the line object
     var stikerPressed = getClickedStikerPos(ev)

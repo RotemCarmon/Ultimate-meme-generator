@@ -4,7 +4,7 @@
 var gMarked;
 var gInitState;
 
-var gKeywords = { 'funny': 7, 'cute': 4, 'dog': 2, 'sad': 5, 'happy': 12, 'baby': 9 }
+var gKeywords = { 'funny': 7, 'cute': 4, 'dog': 2, 'sad': 5, 'happy': 10, 'baby': 9 }
 
 var gImgs = [
     {
