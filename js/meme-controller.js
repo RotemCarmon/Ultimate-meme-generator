@@ -54,8 +54,6 @@ function resize() {
     var elCanvasContainer = document.querySelector('.canvas-container')
     var width = elCanvasContainer.offsetWidth
     var height = elCanvasContainer.offsetWidth
-    console.log('width', width);
-    console.log('height', height);
     const canvas = document.querySelector('canvas')
     canvas.width = width
     canvas.height = height
@@ -164,10 +162,15 @@ function onGetKeywords() {
         if (fontSize > 120) fontSize = 80
         else if (fontSize < 20) fontSize = 20
         strHTMLs += `
-        <li><a class="keyword" onclick="onRenderImgs('${keyword.keyword}')" style="font-size: ${fontSize}px">${keyword.keyword.toLowerCase()}</a></li>
+        <li><a class="keyword" onclick="handleKeywordClicked('${keyword.keyword}')" style="font-size: ${fontSize}px">${keyword.keyword.toLowerCase()}</a></li>
         `
     })
     document.querySelector('.freq-searched').innerHTML = strHTMLs;
+}
+
+function handleKeywordClicked(keyword){
+    onRenderImgs(keyword);
+    onSetKeywords(keyword)
 }
 
 // --- CONTROL PANEL ---

@@ -119,7 +119,8 @@
         }
 
         .keyword {
-            margin-left: 25px
+            margin-left: 25px;
+            user-select: none;
         }
 
         .keyword:hover {
@@ -153,6 +154,9 @@
 
         .first-input {
             grid-row: 1/2;
+            border-radius: 10px;
+            padding-inline-start: 12px;
+            border: 1px solid #65587f;
         }
 
         .lines {
@@ -342,10 +346,6 @@
                 min-width: 600px;
                 padding: 0;
             }
-            .buttons {
-                grid-template-rows: repeat(7, 65px);
-                gap: 7px;
-            }
             .canvas-container {
                 margin: auto;
                 width: 100%;
@@ -382,10 +382,11 @@
 
         @media (max-width:510px) {
             .container {
-                min-width: 300px;
+                min-width: 200px;
             }
             .control-panel {
                 margin: 0;
+                padding: 0;
                 width: 100%;
                 box-shadow: none;
             }
@@ -397,7 +398,6 @@
                 display: block;
             }
             header h1{
-                
                 display: none;
             }
             .burger .navbar-container {
@@ -443,6 +443,8 @@
                 margin-left: 5;
             }
             .text-buttons {
+                /* display: none; */
+                width: 100%;
                 padding: 0;
             }
             .buttons .font-list {
