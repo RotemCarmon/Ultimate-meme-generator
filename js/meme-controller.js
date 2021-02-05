@@ -5,8 +5,7 @@
 
 var gCanvas;
 var gCtx
-var gMouseStartPos;
-var gMousePrevPos;
+var gMousePrevPos = null;
 var gImg;
 
 function onInit() {
@@ -23,12 +22,7 @@ function onInit() {
 
 
 function addEventListeners() {
-    var firstText = document.querySelector('.first-input');
-    firstText.addEventListener('keyup', (ev) => {
-        ev.preventDefault()
-        ev.stopPropagation()
-        onTextInput()
-    });
+
     gCanvas.addEventListener('mousedown', (ev) => {
         ev.preventDefault()
         canvasPressHandler(ev)
@@ -50,6 +44,7 @@ function addEventListeners() {
         dropStiker(ev)
     })
 }
+
 function resize() {
     var elCanvasContainer = document.querySelector('.canvas-container')
     var width = elCanvasContainer.offsetWidth
@@ -72,28 +67,19 @@ function fitLinesToSize() {
 
 
 }
-function touchHandler(ev) {
-    var pos = {}
 
-    if (
-        ev.type === 'touchstart'
-        || ev.type === 'touchmove'
-        || ev.type === 'touchend'
-    ) {
-
-        pos = {
-            x: ev.changedTouches[0].pageX - ev.changedTouches[0].target.offsetLeft,
-            y: ev.changedTouches[0].pageY - ev.changedTouches[0].target.offsetTop
-        }
+function toggleNavbar(elBtn) {
+    if (elBtn.classList.contains('fa-bars')) {
+        elBtn.classList.remove('fa-bars')
+        elBtn.classList.add('fa-times')
+        document.body.classList.add('burger')
     } else {
-        pos = {
-            x: ev.offsetX,
-            y: ev.offsetY
-        }
-    }
-    return pos
-}
+        elBtn.classList.remove('fa-times')
+        elBtn.classList.add('fa-bars')
+        document.body.classList.remove('burger')
 
+    }
+}
 
 // --- IMAGE GALLERY --- 
 
@@ -117,31 +103,28 @@ function onImgSelect(img) {
     gImg.onload = () => {
         onRenderImg()
     }
-
 }
+
 function onRenderImg() {
     gCtx.drawImage(gImg, 0, 0, gCanvas.width, gCanvas.height)
     onRenderText()
     onRenderStikers()
 }
+
 function displayMemeEditor() {
     var elMeme = document.querySelector('.meme-container')
     var elGallery = document.querySelector('.img-gallery-container')
     elGallery.style.display = 'none'
     elMeme.style.display = 'flex'
     resize()
-
-
-
 }
+
 function displayGallery() {
     var elMeme = document.querySelector('.meme-container')
     var elGallery = document.querySelector('.img-gallery-container')
     elGallery.style.display = 'grid'
     elMeme.style.display = 'none'
-
 }
-
 
 // --- SEARCH ---
 
@@ -149,12 +132,13 @@ function onSearchKeyWords(value) {
     var filteredImgs = searchKeyWords(value)
     return filteredImgs
 }
+
 function onSetKeywords(value) {
     setKeywords(value)
     onGetKeywords()
 }
-function onGetKeywords() {
 
+function onGetKeywords() {
     var arr = getArrayOfKeywords()
     var strHTMLs = ``;
     arr.forEach(keyword => {
@@ -168,7 +152,7 @@ function onGetKeywords() {
     document.querySelector('.freq-searched').innerHTML = strHTMLs;
 }
 
-function handleKeywordClicked(keyword){
+function handleKeywordClicked(keyword) {
     onRenderImgs(keyword);
     onSetKeywords(keyword)
 }
@@ -194,9 +178,7 @@ function onRemoveLine() {
     removeLine()
     onRenderImg()
 }
-function onTextInput() {
-    var firstTextBox = document.getElementById('first-text');
-    var txt = firstTextBox.value;
+function onTextInput(txt) {
     setText(txt);
     onRenderImg()
 }
@@ -287,26 +269,20 @@ function drawMark(line) {
 }
 
 function canvasPressHandler(ev) {
-    var txtPressed = getClickedTextPos(ev) // return the line object
-    var stikerPressed = getClickedStikerPos(ev)
-    if (!txtPressed && stikerPressed < 0) {
+    var pos = getTouchPos(ev)
+    var linePressed = getClickedLine(pos) // return the line object
+    var stikerPressedIdx = getClickedStikerIdx(pos)
+    if (!linePressed && stikerPressedIdx === -1) { // No text or stiker was pressed
         clearMarked()
-        onRenderImg()
         return
-    } else if (!txtPressed) {
-        var stikerIdx = getClickedStikerPos(ev) // id in onCanvas array
-        var stikersOnCanvas = getStikersOnCanvas()
-        var stikerId = stikersOnCanvas[stikerIdx].id
-        updateSelectedStikerIdx(stikerId)
-        updateIsSelected(stikerId)
-        updateCurrStiker(stikersOnCanvas[stikerIdx].element)
-        stikersOnCanvas.splice(stikerIdx, 1);
-
-    } else {
-        var marked = checkMark(txtPressed)
-        if (marked) return
-        setMarked(txtPressed)
-        onChooseLine(txtPressed)
+    } else if (!linePressed) { // Stiker pressed
+        var stikersOnCanvas = getStickersOnCanvas()
+        updateCurrStiker(stikersOnCanvas[stikerPressedIdx].element)
+        stikersOnCanvas.splice(stikerPressedIdx, 1);
+    } else { // Text pressed
+        if (isMarked(linePressed)) return
+        setMarked(linePressed)
+        onChooseLine(linePressed) // set selectedLineidx and relevant text properties
         onRenderImg()
     }
 }
@@ -314,12 +290,10 @@ function canvasPressHandler(ev) {
 
 // DRAG & DROP
 
-
 function dragAndDrop(ev) {
-    var pos = touchHandler(ev)
-    setIsDragging(ev)
+    var pos = getTouchPos(ev)
+    setLineIsDragging(pos)
 
-    gMouseStartPos = { x: pos.x, y: pos.y }
     gMousePrevPos = { x: pos.x, y: pos.y };
     gCanvas.addEventListener('mousemove', function (ev) {
         ev.preventDefault()
@@ -333,85 +307,53 @@ function dragAndDrop(ev) {
     })
 
 }
-function whileDrag(ev) {
-    var pos = touchHandler(ev)
-    var isDragged = getIsDragging()
-    if (isDragged < 0) return
-    if (!gMousePrevPos) gMousePrevPos = gMouseStartPos
+
+function onChangePos(ev) {
+    var pos = getTouchPos(ev)
     var mouseCurrPos = { x: pos.x, y: pos.y }
     var delta = {
         x: mouseCurrPos.x - gMousePrevPos.x,
         y: mouseCurrPos.y - gMousePrevPos.y
     }
-
     updatePos(delta)
-    gMousePrevPos = mouseCurrPos
+    return mouseCurrPos
+}
+
+function whileDrag(ev) {
+    var isDragged = getLineIsDragging()
+    if (!isDragged) return
+    gMousePrevPos = onChangePos(ev)
     onRenderImg()
 }
+
 function drop(ev) {
-    var pos = touchHandler(ev)
-    var mouseEndPos = { x: pos.x, y: pos.y }
-    var delta = {
-        x: mouseEndPos.x - gMousePrevPos.x,
-        y: mouseEndPos.y - gMousePrevPos.y
-    }
-    updatePos(delta)
+    onChangePos(ev)
     clearIsDragging()
     onRenderImg()
 }
-function toggleNavbar(elBtn) {
-    if (elBtn.classList.contains('fa-bars')) {
-        elBtn.classList.remove('fa-bars')
-        elBtn.classList.add('fa-times')
-        document.body.classList.add('burger')
-    } else {
-        elBtn.classList.remove('fa-times')
-        elBtn.classList.add('fa-bars')
-        document.body.classList.remove('burger')
 
+function getTouchPos(ev) {
+    // checks if the event is touch or nouse event
+    // returns the correct position object
+    var pos = {}
+
+    if (ev.type === 'touchstart'
+        || ev.type === 'touchmove'
+        || ev.type === 'touchend') {
+
+        pos = {
+            x: ev.changedTouches[0].pageX - ev.changedTouches[0].target.offsetLeft,
+            y: ev.changedTouches[0].pageY - ev.changedTouches[0].target.offsetTop
+        }
+    } else {
+        pos = {
+            x: ev.offsetX,
+            y: ev.offsetY
+        }
     }
+    return pos
 }
+
 function allowDrop(ev) {
     ev.preventDefault();
-}
-
-
-// --- STIKERS --- 
-
-function onCreateStikers() {  // create the img element on control panel
-    var stikers = getStikers()
-    var strHTMLs =
-        stikers.map(stiker => {
-            return `<img src="${stiker.url}" alt="" data-stiker="${stiker.id}" class="stiker pointer" onmousedown="onStikerSelect(this)" ontouchstart="onStikerSelect(this)" draggable="true">`
-        }).join('');
-    var elStikers = document.querySelector('.stikers');
-    elStikers.innerHTML = strHTMLs;
-}
-function onStikerSelect(stiker) { // When stiker is pressed on control panel
-    updateCurrStiker(stiker)
-
-}
-function onRenderStiker(stikerPos) {
-    var currStiker = getStiker()  // selectedStiker element in gStikers object
-    var img = currStiker;
-    gCtx.drawImage(img, stikerPos.x - 50, stikerPos.y - 50, 100, 100)
-
-}
-function onRenderStikers() {  // When the img is rendered this function rerenders the stikers on the canvas
-    var stikersOnCanvas = getStikersOnCanvas();
-    stikersOnCanvas.forEach(stiker => {
-        var img = stiker.element
-        gCtx.drawImage(img, stiker.pos.x, stiker.pos.y, 100, 100)
-
-    })
-}
-function dropStiker(ev) {
-    var selectedStiker = getSelectedId()
-    var pos = touchHandler(ev)
-    if (selectedStiker >= 0) {
-        var dropPos = { x: pos.x, y: pos.y }
-        updateStikerOnCanvas(ev)
-        onRenderStiker(dropPos)
-        clearIsSelected()
-    }
 }

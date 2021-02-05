@@ -1,7 +1,7 @@
 'use strict';
 
 // --- GLOBALS ---
-var gMarked;
+// var gMarked;
 var gInitState;
 
 var gKeywords = { 'funny': 7, 'cute': 4, 'dog': 2, 'sad': 5, 'happy': 10, 'baby': 9 }
@@ -130,44 +130,7 @@ var gMeme = {
         },
     ],
 }
-var gStikers = {
-    selectedStikerIdx: 0,
-    selectedStiker: null,
-    stikers: [
-        {
-            id: 0,
-            url: './stikers/1.png',
-            isSelected: false
-        },
-        {
-            id: 1,
-            url: './stikers/2.png',
-            isSelected: false
-        },
-        {
-            id: 2,
-            url: './stikers/3.png',
-            isSelected: false
-        },
-        {
-            id: 3,
-            url: './stikers/4.png',
-            isSelected: false
-        },
-        {
-            id: 4,
-            url: './stikers/5.png',
-            isSelected: false
-        },
-        {
-            id: 5,
-            url: './stikers/6.png',
-            isSelected: false
-        },
 
-    ],
-    stikersOnCanvas: []
-}
 
 
 // --- CONTROL PANEL ---
@@ -268,21 +231,22 @@ function getImg() {
     return gMeme.selectedImg;
 }
 function updatePos(delta) {
-    var currDragging = getIsDragging()
-    if (currDragging < 0) return
-    var prevPos = gMeme.lines[currDragging].pos
+    var currDragging = getLineIsDragging()
+    if (!currDragging) return
+    var prevPos = currDragging.pos
     var newPos = { x: prevPos.x + delta.x, y: prevPos.y + delta.y }
-    gMeme.lines[currDragging].pos = newPos;
+    currDragging.pos = newPos;
 }
-function setIsDragging(ev) {    // Change isDraggging to be saved in the line Obj
-    var clickedLine = getClickedTextPos(ev)
+
+function setLineIsDragging(pos) {    // Change isDraggging to be saved in the line Obj
+    var clickedLine = getClickedLine(pos)
     if (!clickedLine) return
     else clickedLine.isDragging = true
 }
-function getIsDragging() {
-    return gMeme.lines.findIndex(line => line.isDragging === true)
+function getLineIsDragging() {
+    return gMeme.lines.find(line => line.isDragging)
 }
-function clearIsDragging(){
+function clearIsDragging() {
     gMeme.lines.forEach(line => line.isDragging = false)
 }
 
@@ -336,16 +300,14 @@ function getLinesArray() {
     var lines = gMeme.lines
     return lines
 }
-function getLineIdx(currLine){
+function getLineIdx(currLine) {
     var lines = getLinesArray();
-    return lines.findIndex(line => line.pos === currLine.pos)
+    return lines.findIndex(line => line.pos === currLine.pos) // checks by pointers - is it ok?
 }
 function setCurrLine(line) {
     var lineIdx = getLineIdx(line)
-    if (lineIdx >= 0) {
-        gMeme.selectedLineidx = lineIdx;
-        return
-    }
+    if (lineIdx === -1) return
+    gMeme.selectedLineidx = lineIdx;
 }
 function getCurrLine() {
     return gMeme.selectedLineidx;
@@ -358,15 +320,15 @@ function getTextWidth(text, font) {
     var metrics = context.measureText(text);
     return metrics.width;
 }
-function setMarked(mark) {
+function setMarked(line) {
     clearMarked()
-    mark.isMarked = true;
-    gMarked = mark;
+    line.isMarked = true;
+    // gMarked = line;
 }
 function clearMarked() {
     gMeme.lines.forEach(line => line.isMarked = false)
 }
-function checkMark(txtPressed) {
+function isMarked(txtPressed) {
     return txtPressed.isMarked;
 }
 function calcMarkSize(line) {
@@ -376,25 +338,19 @@ function calcMarkSize(line) {
     var markSize = { x: line.pos.x, y: line.pos.y, width: textWidth, height: textHeight }
     return markSize;
 }
-function getClickedTextPos(ev) {
-    var pos = touchHandler(ev)
-    var ex = pos.x;
-    var ey = pos.y;
+function getClickedLine({ x, y }) {
 
     var lines = getLinesArray()
-    var currLine = lines.find(line => {
+    return lines.find(line => {
         var markSize = calcMarkSize(line);
-        if(
-            ex > +markSize.x
-                && ex < +(markSize.x + markSize.width)
-                && ey > +(markSize.y - markSize.height)
-                && ey < +markSize.y
-        ) return true
-        
-    } )
-    
-    return currLine
+
+        return (x > +markSize.x
+            && x < +(markSize.x + markSize.width)
+            && y > +(markSize.y - markSize.height)
+            && y < +markSize.y)
+    })
 }
+
 function saveInitState() {
     gInitState = JSON.parse(JSON.stringify(gMeme));
 }
@@ -409,84 +365,4 @@ function saveImg() {
     savedImgs.push(gCanvas.toDataURL())
     var str = JSON.stringify(savedImgs)
     localStorage.setItem('my-canvas', str)
-}
-
-
-// --- STIKERS ---
-
-function getStikerId(stiker) {  // Gets the id from the element's dataset
-    return stiker.dataset.stiker
-}
-function updateCurrStiker(stiker) { // Update isSelected on stiker property to true
-    gStikers.selectedStiker = stiker; //element
-
-    var stikerId = getStikerId(stiker);
-    updateIsSelected(stikerId)
-    updateSelectedStikerIdx(stikerId)
-}
-function clearIsSelected() {
-    gStikers.stikers.forEach(stiker => stiker.isSelected = false)
-}
-function updateIsSelected(stikerId) {
-    clearIsSelected()
-    gStikers.stikers[stikerId].isSelected = true
-}
-function updateSelectedStikerIdx(idx) {
-    gStikers.selectedStikerIdx = idx;
-}
-function getSelectedId() {  // RETURN THE STIKER WITH THE PROPERTY isSelected = true
-    var selectedStiker = gStikers.stikers.find(stiker => stiker.isSelected)
-    if (selectedStiker) return selectedStiker.id;
-
-}
-function updateStikerOnCanvas(ev) { // add a new stiker to the stikersOnCanvas Array
-    var stikerPos = _createStikerPos(ev)
-    gStikers.stikersOnCanvas.push(stikerPos)
-}
-function _createStikerPos(ev) { // creates a new stiker position object to be added to the stikersOnCanvas array
-    var stikerId = getSelectedId();
-    var stiker = getStikerById(stikerId) // stiker obj
-    var pos = touchHandler(ev)
-    return {
-        id: stiker.id,
-        element: getStiker(),
-        pos: { x: pos.x - 50, y: pos.y - 50 },
-
-        isSelected: false,
-    }
-}
-function getClickedStikerPos(ev) {  // return the clicked stiker idx
-    var pressPos = touchHandler(ev)
-    var stikerPosses = gStikers.stikersOnCanvas.map(stiker => stiker.pos) // returns an array of all stikers idx position on the canvas
-
-    var ex = pressPos.x;
-    var ey = pressPos.y;  // mouse pressed position
-
-    var stikerPressedIdx = stikerPosses.findIndex(pos => {
-        return ex > +pos.x
-            && ex < +(pos.x + 100)
-            && ey < +(pos.y + 100)
-            && ey > +pos.y
-    })
-
-    return stikerPressedIdx  // returns the array idx of the pressed stiker by it's position on the canvas
-}
-function getStiker() { // returns the stiker object by the selectedStikerIdx in gStikers object
-    var currStiker = gStikers.selectedStiker;
-    return currStiker
-}
-function getStikers() { // return stikers array
-    return gStikers.stikers;
-}
-function getStikersOnCanvas() {
-    return gStikers.stikersOnCanvas
-}
-function getStikerById(id) {
-    return gStikers.stikers.find(stiker => stiker.id === id)
-
-}
-function cleanStikersFromCanvas() {
-    clearIsSelected()
-    gStikers.selectedStikerIdx = 0;
-    gStikers.stikersOnCanvas = [];
 }

@@ -34,7 +34,7 @@
 
             <div class="control-panel">
                 <div class="buttons grid">
-                    <input type="text" name="first-text" class="first-input center-center" id="first-text"
+                    <input type="text" name="first-text" oninput="onTextInput(this.value)" class="first-input center-center" id="first-text"
                         placeholder="Enter Text Here">
                     <div class="lines">
                         <div class="round center-center button add-line fa fa-plus" onclick="onAddLine()"></div>
@@ -101,8 +101,11 @@
         <h4>The Ultimate Meme Generator Created By Rotem Carmon</h4>
     </footer>
 
+    <script src="js/util.js"></script>
     <script src="js/meme-service.js"></script>
     <script src="js/meme-controller.js"></script>
+    <script src="js/sticker-service.js"></script>
+    <script src="js/sticker-controller.js"></script>
     <script src="js/upload-service.js"></script>
 </body>
 
